@@ -1,6 +1,5 @@
 ---
 import BaseCard from "@components/BaseCard.astro";
-import { t } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import {
   getAllPosts,
@@ -8,6 +7,7 @@ import {
   getTagFontSize,
   getTagsWithCount,
 } from "@utils/blogUtils";
+import { getTagLabel } from "@utils/taxonomyLabel";
 import { Icon } from "astro-icon/components";
 
 // 获取所有博客文章
@@ -28,23 +28,23 @@ const minCount = Math.min(...tagMap.values());
 const totalTags = tagMap.size;
 ---
 
-<BaseLayout title={t("label.tagPage")}>
-  <BaseCard title={t("label.tagPage")}>
+<BaseLayout title="标签">
+  <BaseCard title="标签">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div class="flex items-center gap-2">
         <Icon name="lucide:tag" class="w-6 h-6 text-secondary" />
-        <h1 id="h1" class="text-2xl md:text-3xl font-bold">{t("label.tagPage")}</h1>
-        <div class="badge badge-secondary">{totalTags} {t("label.totalTags")}</div>
+        <h1 id="h1" class="text-2xl md:text-3xl font-bold">标签</h1>
+        <div class="badge badge-secondary">{totalTags} 个标签</div>
       </div>
       <a href="/blog" class="btn btn-outline btn-sm gap-2">
         <Icon name="lucide:book-open" class="w-4 h-4" />
-        <span>{t("label.backToBlog")}</span>
+        <span>返回博客</span>
       </a>
     </div>
     <div class="divider my-2"></div>
-    <p class="text-sm opacity-75">{t("label.tagsPageDescription")}</p>
+    <p class="text-sm opacity-75">查看博客中的全部标签。</p>
   </BaseCard>
-  <BaseCard title={t("label.tagPage")}>
+  <BaseCard title="标签">
     <div class="tags-container">
       {
         tagEntries.length > 0 ? (
@@ -59,7 +59,7 @@ const totalTags = tagMap.size;
               >
                 <span class="tags-content">
                   <Icon name="lucide:tag" />
-                  <span class="tags-text">{tag}</span>
+                  <span class="tags-text">{getTagLabel(tag)}</span>
                   <span class="tags-count">{count}</span>
                 </span>
               </a>
@@ -68,7 +68,7 @@ const totalTags = tagMap.size;
         ) : (
           <div class="empty-state">
             <Icon name="ri:emotion-sad-line" class="empty-icon" />
-            <p class="empty-text">{t("label.noTag")}</p>
+            <p class="empty-text">暂无标签</p>
           </div>
         )
       }

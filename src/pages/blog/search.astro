@@ -1,24 +1,23 @@
 ---
 import BaseCard from "@components/BaseCard.astro";
-import { t } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { Icon } from "astro-icon/components";
 ---
 
-<BaseLayout title={t("label.searchPage")}>
-  <BaseCard title={t("label.searchPage")}>
+<BaseLayout title="搜索">
+  <BaseCard title="搜索">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div class="flex items-center gap-2">
         <Icon name="lucide:search" class="w-6 h-6 text-info" />
-        <h1 id="h1" class="text-2xl md:text-3xl font-bold">{t("label.searchPage")}</h1>
+        <h1 id="h1" class="text-2xl md:text-3xl font-bold">搜索</h1>
       </div>
       <a href="/blog" class="btn btn-outline btn-sm gap-2">
         <Icon name="lucide:book-open" class="w-4 h-4" />
-        <span>{t("label.backToBlog")}</span>
+        <span>返回博客</span>
       </a>
     </div>
     <div class="divider my-2"></div>
-    <p class="text-sm opacity-75">{t("label.searchPageDescription")}</p>
+    <p class="text-sm opacity-75">在全站文章中查找你关心的内容。</p>
   </BaseCard>
 
   <BaseCard>
@@ -80,7 +79,7 @@ import { Icon } from "astro-icon/components";
         if (searchContainer) {
           searchContainer.innerHTML = `
             <div class="alert alert-error shadow-lg">
-              Error loading search functionality. Please try again later.
+              搜索功能加载失败，请稍后再试。
             </div>
           `;
         }

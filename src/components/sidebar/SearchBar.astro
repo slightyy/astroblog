@@ -11,17 +11,17 @@ import Card from "../temple/Card.astro";
         <input
           type="text"
           name="q"
-          placeholder={t("label.search") || "Search..."}
-          class="input input-bordered w-full pl-10 pr-16 py-2"
-          aria-label={t("label.search") || "Search"}
+          placeholder={t("label.search") || "搜索..."}
+          class="input input-bordered liquid-input w-full pl-10 pr-16 py-2"
+          aria-label={t("label.search") || "搜索"}
         />
         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <Icon name="lucide:search" class="w-5 h-5" />
         </div>
         <button
           type="submit"
-          class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2"
-          aria-label={t("label.search") || "Search"}
+          class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-lg liquid-action-btn"
+          aria-label={t("label.search") || "搜索"}
         >
           <Icon name="lucide:arrow-right" class="w-4 h-4" />
         </button>

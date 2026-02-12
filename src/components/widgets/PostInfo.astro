@@ -1,9 +1,14 @@
 ---
-import { t } from "@config";
 import type { PostData } from "@interfaces/data";
 import { Icon } from "astro-icon/components";
 
 const { pubDate, badge, word, time } = Astro.props as PostData;
+
+const badgeMap: Record<string, string> = {
+  Pin: "置顶",
+};
+
+const displayBadge = badge ? badgeMap[badge] || badge : "";
 ---
 
 <div class="flex flex-col sm:flex-row sm:justify-between gap-y-2 mb-4 text-xs sm:text-sm opacity-75">
@@ -17,16 +22,16 @@ const { pubDate, badge, word, time } = Astro.props as PostData;
       )
     }
     {
-      badge && (
+      displayBadge && (
         <span class="flex flex-wrap items-center gap-1">
           <Icon name="lucide:bookmark" class="h-4 w-4 flex-shrink-0" />
-          <span class="truncate">{badge}</span>
+          <span class="truncate">{displayBadge}</span>
         </span>
       )
     }
   </div>
   <div class="flex flex-wrap items-center gap-1">
     <Icon name="lucide:book-open" class="h-4 w-4 flex-shrink-0" />
-    <span class="truncate">{word} {t("label.wordCount")} · {time} {t("label.readTime")}</span>
+    <span class="truncate">{word} 字 / {time} 分钟</span>
   </div>
 </div>

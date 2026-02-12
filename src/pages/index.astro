@@ -1,172 +1,235 @@
 ---
-import { Code } from "astro-expressive-code/components";
 import { Icon } from "astro-icon/components";
 import MainCard from "@/components/MainCard.astro";
-import FeatureCard from "@/components/mdx/FeatureCard.astro";
-import GitHubStats from "@/components/mdx/GitHubStats.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const today = new Intl.DateTimeFormat("zh-CN", { dateStyle: "full" }).format(new Date());
 ---
 
-<BaseLayout title="Home">
+<BaseLayout title="首页">
   <MainCard
-    title="Welcome to Frosti"
-    description="A modern, responsive, feature-rich blog theme for Astro with dark/light mode and customizable options."
-    textOverlay="HOME"
+    title="欢迎来到我的小站"
+    description="这里记录技术学习、生活碎片和灵感笔记。"
+    image="/image/image3.png"
     infoIcon="lucide:info"
+    helpText="站点说明"
   >
-    <div class="space-y-8">
-      <!-- Hero Section -->
-      <section class="py-6">
-        <div class="flex flex-col items-center text-center">
-          <h1
-            class="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent leading-loose"
-          >
-            🌟 Frosti Blog Theme
-          </h1>
-          <p class="text-xl text-base-content/80 max-w-3xl mb-8">
-            A minimal, responsive, and feature-rich Astro blog theme designed for creators who value beautiful content
-            presentation and exceptional performance.
-          </p>
-          <div class="flex flex-wrap gap-4 justify-center">
-            <a href="/blog" class="btn btn-primary gap-2 btn-shine-effect">
-              <Icon name="lucide:book-open" class="w-5 h-5" />
-              <span>Explore Blog</span>
-            </a>
-            <a href="https://github.com/EveSunMaple/Frosti" target="_blank" class="btn btn-outline gap-2">
-              <Icon name="lucide:github" class="w-5 h-5" />
-              <span>Star on GitHub</span>
-            </a>
-          </div>
+    <div class="home-shell space-y-8">
+      <section class="home-hero" data-home-section>
+        <p class="home-date">{today}</p>
+        <h1 class="home-title">把热爱写下来，日子就会发光。</h1>
+        <p class="home-desc">
+          这是我的个人博客，主要分享编程学习、折腾记录和生活观察。页面会持续慢慢装修，欢迎常来逛逛。
+        </p>
+        <div class="flex flex-wrap gap-3 justify-center">
+          <a href="/blog" class="btn btn-primary gap-2 home-btn-main">
+            <Icon name="lucide:notebook-pen" class="w-5 h-5" />
+            <span>去看文章</span>
+          </a>
+          <a href="/about" class="btn btn-outline gap-2 home-btn-sub">
+            <Icon name="lucide:user-round" class="w-5 h-5" />
+            <span>了解我</span>
+          </a>
         </div>
       </section>
 
-      <!-- Features Section -->
-      <section class="py-6">
-        <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-          <Icon name="lucide:sparkles" class="w-6 h-6 text-primary" />
-          <span>Features</span>
+      <section data-home-section>
+        <h2 class="home-heading">
+          <Icon name="lucide:sparkles" class="w-5 h-5 text-primary" />
+          <span>站点看点</span>
         </h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <FeatureCard
-            title="Responsive Design"
-            description="Fully responsive design that looks great on all devices from mobile to desktop."
-            icon="lucide:smartphone"
-            color="oklch(0.7 0.2 30)"
-          />
-
-          <FeatureCard
-            title="Dark/Light Mode"
-            description="Toggle between light and dark themes with a beautiful transition effect."
-            icon="lucide:moon"
-            color="oklch(0.65 0.2 280)"
-          />
-
-          <FeatureCard
-            title="MDX Support"
-            description="Write your content in MDX with full support for React components and JSX."
-            icon="lucide:file-code"
-            color="oklch(0.6 0.2 160)"
-          />
-
-          <FeatureCard
-            title="SEO Optimized"
-            description="Built-in SEO optimization with meta tags, OpenGraph, and JSON-LD."
-            icon="lucide:search"
-            color="oklch(0.6 0.2 200)"
-          />
-
-          <FeatureCard
-            title="Fast Performance"
-            description="Optimized for speed with lazy loading, code splitting, and minimal JavaScript."
-            icon="lucide:zap"
-            color="oklch(0.8 0.2 80)"
-          />
-
-          <FeatureCard
-            title="Customizable"
-            description="Easily customize the theme to match your personal brand and preferences."
-            icon="lucide:palette"
-            color="oklch(0.7 0.2 10)"
-          />
+        <div class="home-point-grid">
+          <article class="home-point-card">
+            <div class="home-point-icon">
+              <Icon name="lucide:scroll-text" class="w-5 h-5" />
+            </div>
+            <h3>持续更新</h3>
+            <p>保持规律记录，不求一口气写很多，只求稳定输出。</p>
+          </article>
+          <article class="home-point-card">
+            <div class="home-point-icon">
+              <Icon name="lucide:palette" class="w-5 h-5" />
+            </div>
+            <h3>清爽阅读</h3>
+            <p>减少复杂元素，优先保证阅读舒适和移动端体验。</p>
+          </article>
+          <article class="home-point-card">
+            <div class="home-point-icon">
+              <Icon name="lucide:book-heart" class="w-5 h-5" />
+            </div>
+            <h3>真实表达</h3>
+            <p>记录真实思考和踩坑过程，内容以实用、真诚为主。</p>
+          </article>
         </div>
       </section>
 
-      <!-- Quick Start -->
-      <section class="py-6">
-        <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-          <Icon name="lucide:rocket" class="w-6 h-6 text-primary" />
-          <span>Quick Start</span>
-        </h2>
-
-        <div class="card bg-base-200 p-6">
-          <h3 class="text-xl font-bold mb-4">Get started in three simple steps:</h3>
-
-          <ol class="space-y-6 mb-6">
-            <li class="relative flex flex-col gap-4 items-start">
-              <div class="flex gap-4 items-center">
-                <div
-                  class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-content flex-shrink-0"
-                >
-                  1
-                </div>
-                <h4 class="font-bold">Clone the repository</h4>
-              </div>
-              <div class="relative w-full">
-                <p class="text-base-content/70 mb-2">Use Git to clone the Frosti repository to your local machine:</p>
-                <Code code="git clone --depth 1 https://github.com/EveSunMaple/Frosti.git Frosti" lang="sh" />
-              </div>
-            </li>
-
-            <li class="relative flex flex-col gap-4 items-start">
-              <div class="flex gap-4 items-center">
-                <div
-                  class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-content flex-shrink-0"
-                >
-                  2
-                </div>
-                <h4 class="font-bold">Install dependencies</h4>
-              </div>
-              <div class="relative w-full">
-                <p class="text-base-content/70 mb-2">Navigate to the project directory and install dependencies:</p>
-                <Code code="cd Frosti && npm install" lang="sh" />
-              </div>
-            </li>
-
-            <li class="relative flex flex-col gap-4 items-start">
-              <div class="flex gap-4 items-center">
-                <div
-                  class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-content flex-shrink-0"
-                >
-                  3
-                </div>
-                <h4 class="font-bold">Start the development server</h4>
-              </div>
-              <div class="relative w-full">
-                <p class="text-base-content/70 mb-2">Launch the local development server to see your blog:</p>
-                <Code code="npm run search:index && npm run dev" lang="sh" />
-              </div>
-            </li>
-          </ol>
-
-          <div class="alert bg-primary/10 text-primary mb-0">
-            <Icon name="lucide:lightbulb" class="w-6 h-6" />
-            <span
-              >Check out the <a href="/blog" class="underline">blog section</a> for detailed guides and documentation.</span
-            >
-          </div>
+      <section class="home-note" data-home-section>
+        <div class="flex items-center gap-2 mb-2 text-primary">
+          <Icon name="lucide:megaphone" class="w-5 h-5" />
+          <h2 class="font-bold text-lg">小公告</h2>
         </div>
-      </section>
-
-      <!-- GitHub Stats -->
-      <section class="py-6">
-        <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-          <Icon name="lucide:github" class="w-6 h-6 text-primary" />
-          <span>Repository Stats</span>
-        </h2>
-
-        <GitHubStats username="EveSunMaple" repositoryName="Frosti" showLanguages={true} showContributors={true} />
+        <p>首页已完成第一版简单装修，后续会继续补充分类页、关于页和文章卡片的细节风格。</p>
       </section>
     </div>
   </MainCard>
 </BaseLayout>
+
+<style>
+  .home-shell {
+    font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .home-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    padding: 2rem 1.25rem;
+    text-align: center;
+    border: 1px solid oklch(var(--bc) / 0.12);
+    background: linear-gradient(145deg, oklch(var(--b1)), oklch(var(--b2)));
+  }
+
+  .home-hero::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 999px;
+    background: radial-gradient(circle, oklch(var(--p) / 0.2), transparent 70%);
+    top: -80px;
+    left: -50px;
+    pointer-events: none;
+  }
+
+  .home-hero::after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 999px;
+    background: radial-gradient(circle, oklch(var(--s) / 0.18), transparent 70%);
+    bottom: -110px;
+    right: -70px;
+    pointer-events: none;
+  }
+
+  .home-date {
+    font-size: 0.9rem;
+    color: oklch(var(--bc) / 0.65);
+    margin-bottom: 0.75rem;
+  }
+
+  .home-title {
+    font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    line-height: 1.45;
+    color: oklch(var(--bc));
+  }
+
+  .home-desc {
+    max-width: 42rem;
+    margin: 0 auto 1.4rem;
+    color: oklch(var(--bc) / 0.78);
+    line-height: 1.85;
+  }
+
+  .home-btn-main,
+  .home-btn-sub {
+    transition: transform 0.24s ease;
+  }
+
+  .home-btn-main:hover,
+  .home-btn-sub:hover {
+    transform: translateY(-2px);
+  }
+
+  .home-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.9rem;
+  }
+
+  .home-point-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 0.9rem;
+  }
+
+  .home-point-card {
+    border: 1px solid oklch(var(--bc) / 0.1);
+    border-radius: 1rem;
+    padding: 1rem;
+    background: color-mix(in oklch, oklch(var(--b1)), oklch(var(--p) / 0.04));
+    box-shadow: 0 8px 30px oklch(var(--bc) / 0.03);
+  }
+
+  .home-point-card h3 {
+    font-size: 1.02rem;
+    font-weight: 700;
+    margin: 0.45rem 0;
+  }
+
+  .home-point-card p {
+    color: oklch(var(--bc) / 0.72);
+    line-height: 1.75;
+    font-size: 0.95rem;
+  }
+
+  .home-point-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.65rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: oklch(var(--p));
+    background: oklch(var(--p) / 0.12);
+  }
+
+  .home-note {
+    border-radius: 1rem;
+    border: 1px dashed oklch(var(--p) / 0.45);
+    padding: 1rem 1rem 1.1rem;
+    background: oklch(var(--p) / 0.05);
+    line-height: 1.8;
+  }
+
+  [data-home-section] {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: homeFadeIn 0.55s ease forwards;
+  }
+
+  [data-home-section]:nth-of-type(1) {
+    animation-delay: 0.04s;
+  }
+
+  [data-home-section]:nth-of-type(2) {
+    animation-delay: 0.14s;
+  }
+
+  [data-home-section]:nth-of-type(3) {
+    animation-delay: 0.24s;
+  }
+
+  @keyframes homeFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .home-point-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .home-hero {
+      padding: 2.2rem 2rem;
+    }
+  }
+</style>

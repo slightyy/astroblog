@@ -20,6 +20,9 @@ import { remarkReadingTime } from "./src/plugins/remark-reading-time";
 export default defineConfig({
   site: USER_SITE,
   output: "static",
+  devToolbar: {
+    enabled: false,
+  },
   style: {
     scss: {
       includePaths: ["./src/styles"],

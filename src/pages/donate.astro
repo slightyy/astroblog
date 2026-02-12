@@ -1,0 +1,446 @@
+---
+const SITE_NAME = "Jeffery";
+
+/* 收款地址 */
+const SOLANA_ADDRESS = "C9bBw6bBb6Av88dmUJqRgzptNEcSevV9bT6U5eCs8AZG";
+const HYPERLIQUID_ADDRESS = "0x817180ddE8dD9b677029bB71363Cb50904538dC4";
+
+/* 区块浏览器 */
+const SOLANA_EXPLORER = `https://explorer.solana.com/address/${SOLANA_ADDRESS}`;
+const HYPERLIQUID_EXPLORER = `https://app.hyperliquid.xyz/explorer/${HYPERLIQUID_ADDRESS}`;
+
+/* 感谢支持者（手动维护） */
+type Supporter = {
+  name: string;
+  note: string;
+};
+
+const SUPPORTERS: Supporter[] = [
+  // { name: "Alice", note: "Solana 打赏" },
+  // { name: "Bob", note: "HYPE 支持" },
+];
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>支持我的创作 | 打赏</title>
+    <meta name="description" content={`通过 Solana 或 Hyperliquid 支持 ${SITE_NAME} 的创作。`} />
+
+    <style>
+      :root {
+        color-scheme: light dark;
+        --donate-border: rgba(127, 127, 127, 0.25);
+        --donate-panel: rgba(127, 127, 127, 0.08);
+        --donate-panel-strong: rgba(127, 127, 127, 0.14);
+        --donate-shadow: 0 12px 34px rgba(0, 0, 0, 0.12);
+        font-family:
+          "Noto Sans SC",
+          "PingFang SC",
+          "Microsoft YaHei",
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at 8% 8%, rgba(120, 190, 255, 0.22), transparent 28%),
+          radial-gradient(circle at 92% 12%, rgba(120, 255, 214, 0.16), transparent 30%),
+          linear-gradient(160deg, rgba(127, 127, 127, 0.06), transparent 32%);
+      }
+
+      .donate-wrap {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 34px 18px 56px;
+      }
+
+      .donate-hero {
+        border: 1px solid var(--donate-border);
+        border-radius: 20px;
+        padding: 24px;
+        background: var(--donate-panel);
+        backdrop-filter: blur(3px);
+        box-shadow: var(--donate-shadow);
+        margin-bottom: 18px;
+      }
+
+      .donate-title {
+        margin: 0;
+        font-size: clamp(1.7rem, 2.6vw, 2.1rem);
+        font-weight: 700;
+      }
+
+      .donate-subtitle {
+        margin: 10px 0 0;
+        font-size: 0.95rem;
+        line-height: 1.9;
+        opacity: 0.82;
+      }
+
+      .donate-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+
+      .donate-tab {
+        border: 1px solid var(--donate-border);
+        border-radius: 999px;
+        padding: 10px 16px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        background: transparent;
+        color: inherit;
+        transition: all 0.2s ease;
+      }
+
+      .donate-tab:hover {
+        background: var(--donate-panel);
+      }
+
+      .donate-tab.active {
+        background: var(--donate-panel-strong);
+        border-color: rgba(72, 149, 239, 0.55);
+      }
+
+      .donate-panel {
+        display: none;
+        animation: donate-fade-in 0.2s ease;
+      }
+
+      .donate-panel.active {
+        display: block;
+      }
+
+      .donate-card {
+        border: 1px solid var(--donate-border);
+        border-radius: 20px;
+        padding: 22px;
+        background: var(--donate-panel);
+        box-shadow: var(--donate-shadow);
+      }
+
+      .donate-pay-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 300px;
+        gap: 22px;
+        align-items: start;
+      }
+
+      .donate-network {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--donate-border);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        margin-bottom: 12px;
+        background: rgba(127, 127, 127, 0.1);
+      }
+
+      .donate-card h2 {
+        margin: 0 0 8px;
+        font-size: 1.35rem;
+      }
+
+      .donate-desc {
+        margin: 0 0 12px;
+        font-size: 0.92rem;
+        line-height: 1.7;
+        opacity: 0.82;
+      }
+
+      .donate-addr {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.86rem;
+        line-height: 1.65;
+        word-break: break-all;
+        border: 1px solid var(--donate-border);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 12px;
+        background: rgba(127, 127, 127, 0.1);
+      }
+
+      .donate-btns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .donate-btn {
+        border: 1px solid var(--donate-border);
+        border-radius: 10px;
+        padding: 9px 13px;
+        font-size: 0.88rem;
+        cursor: pointer;
+        color: inherit;
+        background: transparent;
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+
+      .donate-btn:hover {
+        background: rgba(127, 127, 127, 0.15);
+      }
+
+      .donate-btn-copy.done {
+        border-color: rgba(22, 163, 74, 0.45);
+        color: #15803d;
+      }
+
+      .donate-qr-wrap {
+        border: 1px solid var(--donate-border);
+        border-radius: 16px;
+        padding: 14px;
+        background: rgba(255, 255, 255, 0.6);
+      }
+
+      .donate-qr {
+        width: 100%;
+        border-radius: 12px;
+        display: block;
+        border: 1px solid rgba(127, 127, 127, 0.2);
+      }
+
+      .donate-qr-tips {
+        margin: 9px 2px 0;
+        font-size: 0.8rem;
+        opacity: 0.72;
+      }
+
+      .donate-supporters {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .donate-supporters li {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 11px 0;
+        border-bottom: 1px dashed var(--donate-border);
+        font-size: 0.92rem;
+      }
+
+      .donate-supporters li:last-child {
+        border-bottom: none;
+      }
+
+      .donate-muted {
+        font-size: 0.86rem;
+        opacity: 0.68;
+      }
+
+      .donate-toast {
+        position: fixed;
+        left: 50%;
+        bottom: 18px;
+        transform: translate(-50%, 20px);
+        opacity: 0;
+        pointer-events: none;
+        border: 1px solid var(--donate-border);
+        border-radius: 999px;
+        padding: 8px 14px;
+        background: rgba(20, 20, 20, 0.85);
+        color: #fff;
+        font-size: 0.84rem;
+        transition: all 0.2s ease;
+      }
+
+      .donate-toast.show {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+
+      @keyframes donate-fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 820px) {
+        .donate-pay-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .donate-qr-wrap {
+          max-width: 340px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="donate-wrap">
+      <section class="donate-hero">
+        <h1 class="donate-title">☕ 支持我的创作</h1>
+        <p class="donate-subtitle">如果本站文章、项目或工具对你有帮助，欢迎通过以下方式支持。每一份支持都会转化为持续更新的动力。</p>
+      </section>
+
+      <div class="donate-tabs" role="tablist" aria-label="打赏方式">
+        <button class="donate-tab active" data-tab="solana" role="tab" aria-selected="true">Solana</button>
+        <button class="donate-tab" data-tab="hype" role="tab" aria-selected="false">Hyperliquid</button>
+        <button class="donate-tab" data-tab="thanks" role="tab" aria-selected="false">感谢支持者</button>
+      </div>
+
+      <section class="donate-panel active" id="tab-solana">
+        <div class="donate-card donate-pay-grid">
+          <div>
+            <div class="donate-network">SOL / USDT</div>
+            <h2>Solana 网络打赏</h2>
+            <p class="donate-desc">支持 SOL 和 USDT（SPL）。复制地址后可在钱包中直接转账。</p>
+
+            <div class="donate-addr" id="solAddr">{SOLANA_ADDRESS}</div>
+
+            <div class="donate-btns">
+              <button class="donate-btn donate-btn-copy" data-copy="sol">复制地址</button>
+              <a class="donate-btn" href={SOLANA_EXPLORER} target="_blank" rel="noopener noreferrer">区块浏览器</a>
+            </div>
+          </div>
+
+          <div class="donate-qr-wrap">
+            <img class="donate-qr" src="/image/solana-donate.png" alt="Solana 打赏二维码" loading="lazy" />
+            <p class="donate-qr-tips">扫码打赏，或复制地址转账</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="donate-panel" id="tab-hype">
+        <div class="donate-card donate-pay-grid">
+          <div>
+            <div class="donate-network">HYPE / EVM</div>
+            <h2>Hyperliquid 网络打赏</h2>
+            <p class="donate-desc">用于接收 HYPE 等资产，转账前请确认网络与地址格式。</p>
+
+            <div class="donate-addr" id="hypeAddr">{HYPERLIQUID_ADDRESS}</div>
+
+            <div class="donate-btns">
+              <button class="donate-btn donate-btn-copy" data-copy="hype">复制地址</button>
+              <a class="donate-btn" href={HYPERLIQUID_EXPLORER} target="_blank" rel="noopener noreferrer">区块浏览器</a>
+            </div>
+          </div>
+
+          <div class="donate-qr-wrap">
+            <img class="donate-qr" src="/image/hype-donate.png" alt="Hyperliquid 打赏二维码" loading="lazy" />
+            <p class="donate-qr-tips">扫码打赏，或复制地址转账</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="donate-panel" id="tab-thanks">
+        <div class="donate-card">
+          <h2>感谢支持者</h2>
+          {
+            SUPPORTERS.length === 0 ? (
+              <p class="donate-muted">暂无公开展示的支持者，感谢每一份支持 ❤️</p>
+            ) : (
+              <ul class="donate-supporters">
+                {SUPPORTERS.map((s) => (
+                  <li>
+                    <span>{s.name}</span>
+                    <span class="donate-muted">{s.note}</span>
+                  </li>
+                ))}
+              </ul>
+            )
+          }
+        </div>
+      </section>
+    </main>
+
+    <div class="donate-toast" id="copyToast">地址已复制</div>
+
+    <script>
+      const tabs = document.querySelectorAll(".donate-tab");
+      const panels = document.querySelectorAll(".donate-panel");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const target = tab.getAttribute("data-tab");
+          if (!target) return;
+
+          tabs.forEach((item) => {
+            item.classList.remove("active");
+            item.setAttribute("aria-selected", "false");
+          });
+
+          panels.forEach((panel) => panel.classList.remove("active"));
+
+          tab.classList.add("active");
+          tab.setAttribute("aria-selected", "true");
+
+          const activePanel = document.getElementById(`tab-${target}`);
+          if (activePanel) activePanel.classList.add("active");
+        });
+      });
+
+      async function copyText(text: string): Promise<boolean> {
+        try {
+          await navigator.clipboard.writeText(text);
+          return true;
+        } catch {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          const ok = document.execCommand("copy");
+          document.body.removeChild(ta);
+          return ok;
+        }
+      }
+
+      const toast = document.getElementById("copyToast");
+      let toastTimer: ReturnType<typeof setTimeout> | undefined;
+
+      function showToast(msg: string): void {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 1400);
+      }
+
+      document.querySelectorAll("[data-copy]").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const type = btn.getAttribute("data-copy");
+          const text = type === "sol"
+            ? document.getElementById("solAddr")?.textContent?.trim()
+            : document.getElementById("hypeAddr")?.textContent?.trim();
+
+          if (!text) return;
+
+          const ok = await copyText(text);
+          showToast(ok ? "地址已复制" : "复制失败，请手动复制");
+
+          btn.classList.add("done");
+          const oldText = btn.textContent;
+          btn.textContent = ok ? "已复制" : "复制失败";
+          setTimeout(() => {
+            btn.classList.remove("done");
+            btn.textContent = oldText;
+          }, 1200);
+        });
+      });
+    </script>
+  </body>
+</html>

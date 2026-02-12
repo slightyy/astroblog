@@ -1,13 +1,14 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import BaseCard from "@components/BaseCard.astro";
-import { DATE_FORMAT, t } from "@config";
+import { DATE_FORMAT } from "@config";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import {
   getAllPosts,
   getCategoriesWithPosts,
   getCategoryColorClass,
 } from "@utils/blogUtils";
+import { getCategoryLabel } from "@utils/taxonomyLabel";
 import dayjs from "@utils/dayjs";
 import { Icon } from "astro-icon/components";
 
@@ -33,23 +34,23 @@ categoryEntries.forEach(([_, posts]) => {
 const totalCategories = categoryMap.size;
 ---
 
-<BaseLayout title={t("label.categoryPage")}>
-  <BaseCard title={t("label.categoryPage")}>
+<BaseLayout title="分类">
+  <BaseCard title="分类">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div class="flex items-center gap-2">
         <Icon name="lucide:folder" class="w-6 h-6 text-primary" />
-        <h1 id="h1" class="text-2xl md:text-3xl font-bold">{t("label.categoryPage")}</h1>
-        <div class="badge badge-primary">{totalCategories} {t("label.totalCategories")}</div>
+        <h1 id="h1" class="text-2xl md:text-3xl font-bold">分类</h1>
+        <div class="badge badge-primary">{totalCategories} 个分类</div>
       </div>
       <a href="/blog" class="btn btn-outline btn-sm gap-2">
         <Icon name="lucide:book-open" class="w-4 h-4" />
-        <span>{t("label.backToBlog")}</span>
+        <span>返回博客</span>
       </a>
     </div>
     <div class="divider my-2"></div>
-    <p class="text-sm opacity-75">{t("label.categoriesPageDescription")}</p>
+    <p class="text-sm opacity-75">查看博客中的全部分类。</p>
   </BaseCard>
-  <BaseCard title={t("label.categoryPage")}>
+  <BaseCard title="分类">
     <div class="categories-container">
       {
         categoryEntries.length > 0 ? (
@@ -62,10 +63,10 @@ const totalCategories = categoryMap.size;
                       <div class="category-icon">
                         <Icon name="lucide:folder" />
                       </div>
-                      <h2>{category}</h2>
+                      <h2>{getCategoryLabel(category)}</h2>
                       <span class="category-count">{posts.length}</span>
                     </div>
-                    <button class="toggle-btn" aria-label="Toggle category content">
+                    <button class="toggle-btn" aria-label="展开或收起分类内容">
                       <Icon name="ri:arrow-down-s-line" class="toggle-icon" />
                     </button>
                   </div>
@@ -89,7 +90,7 @@ const totalCategories = categoryMap.size;
         ) : (
           <div class="empty-state">
             <Icon name="ri:emotion-sad-line" class="empty-icon" />
-            <p class="empty-text">{t("label.noCategory")}</p>
+            <p class="empty-text">暂无分类</p>
           </div>
         )
       }

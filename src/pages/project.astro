@@ -6,28 +6,26 @@ import RepositoryCard from "@/components/mdx/RepositoryCard.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="Projects">
+<BaseLayout title="项目">
   <MainCard
-    title="Projects"
-    description="A showcase of my open-source projects and contributions on GitHub."
-    textOverlay="PROJECTS"
+    title="项目展示"
+    description="这里整理了我的开源项目和参与记录。"
+    textOverlay="项目"
     infoIcon="lucide:code-2"
   >
-    <!-- Featured Projects -->
     <section class="py-4">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
         <Icon name="lucide:star" class="w-6 h-6 text-primary" />
-        <span>Featured Projects</span>
+        <span>精选项目</span>
       </h2>
 
-      <GitHubStats username="EveSunMaple" repositoryName="Frosti" showLanguages={true} showContributors={true} />
+      <GitHubStats username="EveSunMaple" repositoryName="Frosti" showCommitGraph={true} />
     </section>
 
-    <!-- My Repositories -->
     <section class="py-4">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
         <Icon name="lucide:folder" class="w-6 h-6 text-primary" />
-        <span>My Repositories</span>
+        <span>我的仓库</span>
       </h2>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -47,16 +45,15 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
           class="btn btn-outline gap-2"
         >
           <Icon name="lucide:github" class="w-5 h-5" />
-          <span>View More on GitHub</span>
+          <span>在 GitHub 查看更多</span>
         </a>
       </div>
     </section>
 
-    <!-- Open Source Contributions -->
     <section class="py-4">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
         <Icon name="lucide:git-pull-request" class="w-6 h-6 text-primary" />
-        <span>Open Source Contributions</span>
+        <span>开源参与</span>
       </h2>
 
       <div class="card bg-base-200 p-6">
@@ -65,17 +62,17 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
             [
               {
                 project: "Astro",
-                description: "Contributed to performance improvements and bug fixes",
+                description: "参与性能优化和问题修复",
                 url: "https://github.com/withastro/astro",
               },
               {
                 project: "TailwindCSS",
-                description: "Added new utility classes and documentation improvements",
+                description: "补充实用工具类并完善文档体验",
                 url: "https://github.com/tailwindlabs/tailwindcss",
               },
               {
                 project: "DaisyUI",
-                description: "Contributed component enhancements and theme improvements",
+                description: "参与组件增强与主题细节改进",
                 url: "https://github.com/saadeghi/daisyui",
               },
             ].map((contrib) => (

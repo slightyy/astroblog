@@ -1,6 +1,5 @@
 ---
 import { Image } from "astro:assets";
-import { t } from "@config";
 import type { PostData } from "@interfaces/data";
 import { Icon } from "astro-icon/components";
 import Card from "@/components/temple/Card.astro";
@@ -19,7 +18,7 @@ const {
   description,
   image,
   infoIcon = "lucide:help-circle",
-  helpText = t("label.learnMore"),
+  helpText = "了解更多",
   textOverlay,
   showTextBackground = true,
   headerClass = "",

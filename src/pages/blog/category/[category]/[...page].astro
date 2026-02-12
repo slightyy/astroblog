@@ -3,11 +3,11 @@ import BaseCard from "@components/BaseCard.astro";
 import PostCard from "@components/PostCard.astro";
 import CardGroup from "@components/temple/CardGroup.astro";
 import Pagination from "@components/widgets/Pagination.astro";
-import { t } from "@config";
 import type { Page, Post } from "@interfaces/data";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { generatePageLinks } from "@utils/blogUtils";
 import { getCategoryPaginationPaths } from "@utils/paginationUtils";
+import { getCategoryLabel } from "@utils/taxonomyLabel";
 import { Icon } from "astro-icon/components";
 
 export async function getStaticPaths({ paginate }: { paginate: any }) {
@@ -16,26 +16,27 @@ export async function getStaticPaths({ paginate }: { paginate: any }) {
 
 const { page } = Astro.props as { page: Page };
 const params = Astro.params as { category: string; page: string };
+const categoryLabel = getCategoryLabel(params.category);
 
 const totalPages = Math.ceil(page.total / page.size);
 const pageLinks = generatePageLinks(totalPages);
 ---
 
-<BaseLayout title={`${t("label.categoryPage")} - ${params.category}`}>
-  <BaseCard title={t("label.categoryPage")}>
+<BaseLayout title={`分类 - ${categoryLabel}`}>
+  <BaseCard title="分类">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div class="flex items-center gap-2">
         <Icon name="lucide:folder" class="w-6 h-6 text-primary" />
-        <h1 id="h1" class="text-2xl md:text-3xl font-bold">{params.category}</h1>
-        <div class="badge badge-primary">{page.total} {page.total === 1 ? t("label.post") : t("label.posts")}</div>
+        <h1 id="h1" class="text-2xl md:text-3xl font-bold">{categoryLabel}</h1>
+        <div class="badge badge-primary">{page.total} 篇文章</div>
       </div>
       <a href="/blog/categories" class="btn btn-outline btn-sm gap-2">
         <Icon name="lucide:folder" class="w-4 h-4" />
-        <span>{t("label.allCategories")}</span>
+        <span>全部分类</span>
       </a>
     </div>
     <div class="divider my-2"></div>
-    <p class="text-sm opacity-75">{t("label.categoryDescription")}</p>
+    <p class="text-sm opacity-75">浏览该分类下的全部文章。</p>
   </BaseCard>
   <CardGroup cols="1" gap="6">
     {
