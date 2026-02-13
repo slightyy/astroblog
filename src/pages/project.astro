@@ -1,104 +1,282 @@
 ---
+import { execSync } from "node:child_process";
 import { Icon } from "astro-icon/components";
 import MainCard from "@/components/MainCard.astro";
-import GitHubStats from "@/components/mdx/GitHubStats.astro";
-import RepositoryCard from "@/components/mdx/RepositoryCard.astro";
+import { ongoingProjects, participatedProjects } from "@/data/projectEntries";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const formatDateKey = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const isValidGitRef = (ref: string): boolean => {
+  try {
+    execSync(`git rev-parse --verify --quiet ${ref}`, { stdio: "ignore" });
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const resolveGitRef = (): string => {
+  try {
+    const originHead = execSync(
+      "git symbolic-ref --quiet --short refs/remotes/origin/HEAD",
+      { encoding: "utf8" },
+    ).trim();
+
+    if (originHead && isValidGitRef(originHead)) return originHead;
+  } catch {
+    // Ignore and use fallback refs.
+  }
+
+  const fallbackRefs = ["origin/main", "origin/master", "HEAD"];
+  for (const ref of fallbackRefs) {
+    if (isValidGitRef(ref)) return ref;
+  }
+
+  return "HEAD";
+};
+
+const getBlogUpdateMap = (ref: string): Map<string, number> => {
+  const map = new Map<string, number>();
+  try {
+    const output = execSync(
+      `git log ${ref} --since="365 days ago" --date=short --pretty=format:%ad`,
+      { encoding: "utf8" },
+    ).trim();
+
+    if (!output) return map;
+
+    for (const line of output.split(/\r?\n/)) {
+      const dateKey = line.trim();
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) continue;
+      map.set(dateKey, (map.get(dateKey) || 0) + 1);
+    }
+  } catch {
+    return map;
+  }
+  return map;
+};
+
+const gitRef = resolveGitRef();
+const activityMap = getBlogUpdateMap(gitRef);
+const activitySource = gitRef.startsWith("origin/")
+  ? `远端分支 ${gitRef}`
+  : "本地分支 HEAD（未检测到远端默认分支）";
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const startDate = new Date(today);
+startDate.setDate(startDate.getDate() - 364);
+
+const rawDays = Array.from({ length: 365 }, (_, index) => {
+  const date = new Date(startDate);
+  date.setDate(startDate.getDate() + index);
+  const key = formatDateKey(date);
+  const count = activityMap.get(key) || 0;
+  return {
+    count,
+    label: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`,
+  };
+});
+
+const maxActivity = rawDays.reduce((max, day) => Math.max(max, day.count), 0);
+
+const getActivityLevel = (count: number): number => {
+  if (count === 0 || maxActivity === 0) return 0;
+  const ratio = count / maxActivity;
+  if (ratio <= 0.25) return 1;
+  if (ratio <= 0.5) return 2;
+  if (ratio <= 0.75) return 3;
+  return 4;
+};
+
+const days = rawDays.map((day) => ({
+  ...day,
+  level: getActivityLevel(day.count),
+}));
+
+const weekColumns: (typeof days)[] = [];
+for (let i = 0; i < days.length; i += 7) {
+  weekColumns.push(days.slice(i, i + 7));
+}
+
+const totalBlogUpdates = days.reduce((sum, day) => sum + day.count, 0);
+const rangeStartLabel = formatDateKey(startDate);
+const rangeEndLabel = formatDateKey(today);
+const latestUpdateLabel = [...days]
+  .reverse()
+  .find((day) => day.count > 0)?.label;
 ---
 
 <BaseLayout title="项目">
   <MainCard
     title="项目展示"
-    description="这里整理了我的开源项目和参与记录。"
+    description="这里整理了我的开发项目和阶段性实践。"
     textOverlay="项目"
     infoIcon="lucide:code-2"
   >
     <section class="py-4">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-        <Icon name="lucide:star" class="w-6 h-6 text-primary" />
-        <span>精选项目</span>
+        <Icon name="lucide:activity" class="w-6 h-6 text-primary" />
+        <span>博客更新活跃度</span>
       </h2>
 
-      <GitHubStats username="EveSunMaple" repositoryName="Frosti" showCommitGraph={true} />
-    </section>
+      <div class="card bg-base-200 p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <p class="text-base-content/80">统计来源：{activitySource} 最近 365 天对 astroblog 仓库的提交</p>
+          <div class="badge badge-primary badge-outline">{totalBlogUpdates} 次提交</div>
+        </div>
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-base-content/70 mb-4">
+          <p>统计区间：{rangeStartLabel} - {rangeEndLabel}</p>
+          <p>最近更新：{latestUpdateLabel ?? "暂无记录"}</p>
+        </div>
+        <p class="text-xs text-base-content/70 mb-4">未提交或未推送到远端分支的本地改动不会计入。</p>
 
-    <section class="py-4">
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-        <Icon name="lucide:folder" class="w-6 h-6 text-primary" />
-        <span>我的仓库</span>
-      </h2>
+        <div class="overflow-x-auto">
+          <div class="blog-activity-map">
+            {
+              weekColumns.map((week) => (
+                <div class="activity-week">
+                  {week.map((day) => (
+                    <div
+                      class:list={[
+                        "activity-cell",
+                        `activity-level-${day.level}`,
+                      ]}
+                      title={`${day.label}: ${day.count} 次更新`}
+                    ></div>
+                  ))}
+                </div>
+              ))
+            }
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-2 text-[11px] text-base-content/60">
+          <span>{rangeStartLabel}</span>
+          <span>{rangeEndLabel}</span>
+        </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <RepositoryCard repo="EveSunMaple/Frosti" isPinned={true} />
-        <RepositoryCard repo="EveSunMaple/SaroProck" isPinned={true} />
-        <RepositoryCard repo="EveSunMaple/astion-static" />
-        <RepositoryCard repo="EveSunMaple/astro-update-theme" />
-        <RepositoryCard repo="EveSunMaple/Word-testing-application" />
-        <RepositoryCard repo="EveSunMaple/Smooth-Snake-Game" />
-      </div>
-
-      <div class="flex justify-center mt-10">
-        <a
-          href="https://github.com/EveSunMaple?tab=repositories"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn btn-outline gap-2"
-        >
-          <Icon name="lucide:github" class="w-5 h-5" />
-          <span>在 GitHub 查看更多</span>
-        </a>
+        <div class="flex items-center justify-end gap-2 mt-4 text-xs text-base-content/70">
+          <span>低</span>
+          <span class="activity-cell activity-level-0"></span>
+          <span class="activity-cell activity-level-1"></span>
+          <span class="activity-cell activity-level-2"></span>
+          <span class="activity-cell activity-level-3"></span>
+          <span class="activity-cell activity-level-4"></span>
+          <span>高</span>
+        </div>
       </div>
     </section>
 
     <section class="py-4">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
         <Icon name="lucide:git-pull-request" class="w-6 h-6 text-primary" />
-        <span>开源参与</span>
+        <span>编程参与项目</span>
       </h2>
 
       <div class="card bg-base-200 p-6">
-        <ul class="space-y-6">
+        <ol class="space-y-4">
           {
-            [
-              {
-                project: "Astro",
-                description: "参与性能优化和问题修复",
-                url: "https://github.com/withastro/astro",
-              },
-              {
-                project: "TailwindCSS",
-                description: "补充实用工具类并完善文档体验",
-                url: "https://github.com/tailwindlabs/tailwindcss",
-              },
-              {
-                project: "DaisyUI",
-                description: "参与组件增强与主题细节改进",
-                url: "https://github.com/saadeghi/daisyui",
-              },
-            ].map((contrib) => (
-              <li class="flex items-start gap-4">
-                <div class="flex-shrink-0 bg-base-300 p-2 rounded-full">
-                  <Icon name="lucide:git-commit" class="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h3 class="text-lg font-bold">
-                    <a
-                      href={contrib.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="hover:text-primary transition-colors flex items-center gap-1"
-                    >
-                      {contrib.project}
-                      <Icon name="lucide:external-link" class="w-4 h-4" />
-                    </a>
-                  </h3>
-                  <p class="text-base-content/80">{contrib.description}</p>
-                </div>
+            participatedProjects.map((project, index) => (
+              <li class="flex items-start gap-3">
+                <span class="badge badge-lg mt-1 project-index-badge">{index + 1}</span>
+                <a href={`/project/${project.slug}`} class="project-item-link">
+                  <p class="text-base-content/90 leading-relaxed font-medium">{project.title}</p>
+                  <p class="text-sm text-base-content/70 mt-1">{project.summary}</p>
+                </a>
               </li>
             ))
           }
-        </ul>
+        </ol>
+      </div>
+    </section>
+
+    <section class="py-4">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <Icon name="lucide:briefcase-business" class="w-6 h-6 text-primary" />
+        <span>正在参与的项目</span>
+      </h2>
+
+      <div class="card bg-base-200 p-6">
+        <ol class="space-y-4">
+          {
+            ongoingProjects.map((project, index) => (
+              <li class="flex items-start gap-3">
+                <span class="badge badge-lg mt-1 project-index-badge">{index + 1}</span>
+                <a href={`/project/${project.slug}`} class="project-item-link">
+                  <p class="text-base-content/90 leading-relaxed font-medium">{project.title}</p>
+                  <p class="text-sm text-base-content/70 mt-1">{project.summary}</p>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
       </div>
     </section>
   </MainCard>
 </BaseLayout>
+
+<style>
+  .blog-activity-map {
+    display: flex;
+    gap: 4px;
+    min-width: max-content;
+  }
+
+  .activity-week {
+    display: grid;
+    grid-template-rows: repeat(7, 12px);
+    gap: 4px;
+  }
+
+  .activity-cell {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  .activity-level-0 {
+    background: color-mix(in oklab, var(--fallback-b3, oklch(var(--b3))) 85%, transparent);
+  }
+
+  .activity-level-1 {
+    background: #cfe8d6;
+  }
+
+  .activity-level-2 {
+    background: #95d2a6;
+  }
+
+  .activity-level-3 {
+    background: #56b97a;
+  }
+
+  .activity-level-4 {
+    background: #1f8a4c;
+  }
+
+  .project-index-badge {
+    background: oklch(var(--p));
+    color: oklch(var(--pc));
+    border-color: oklch(var(--p));
+    min-width: 2rem;
+  }
+
+  .project-item-link {
+    display: block;
+    flex: 1;
+    border-radius: 0.5rem;
+    padding: 0.15rem 0.35rem;
+    transition: background-color 0.2s ease;
+  }
+
+  .project-item-link:hover {
+    background: color-mix(in oklab, var(--fallback-b3, oklch(var(--b3))) 45%, transparent);
+  }
+</style>

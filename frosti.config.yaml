@@ -1,4 +1,4 @@
-# 站点基础信息
+﻿# 站点基础信息
 site:
   tab: 我的博客
   title: 我的博客
@@ -28,22 +28,6 @@ site:
       href: /blog
       svg: "material-symbols:book-2-outline-rounded"
       target: _self
-      subItems:
-        - id: all
-          text: 全部文章
-          href: /blog
-          svg: "material-symbols:ink-pen-outline-rounded"
-          target: _self
-        - id: documentation
-          text: 文档教程
-          href: /blog/category/Documentation
-          svg: "material-symbols:unknown-document-outline-rounded"
-          target: _self
-        - id: examples
-          text: 示例演示
-          href: /blog/category/Examples
-          svg: "material-symbols:deployed-code-outline"
-          target: _self
     - id: project
       text: 项目
       href: /project
@@ -73,20 +57,17 @@ user:
         ariaLabel: Solana 链打赏
         title: "Solana / USDT 打赏支持"
         svg: "ri:cup-line"
-
       - href: "https://github.com/slightyy?tab=repositories"
         ariaLabel: GitHub
         title: GitHub
         svg: "ri:github-line"
-
       - href: "https://space.bilibili.com/256632366?spm_id_from=333.1007.0.0"
         ariaLabel: 哔哩哔哩
         title: 哔哩哔哩
         svg: "ri:bilibili-line"
-
       - href: "https://x.com/baggins69339049"
         ariaLabel: X 平台
-        title: X（Twitter）
+        title: X (Twitter)
         svg: "ri:twitter-line"
 
   footer:
@@ -95,18 +76,15 @@ user:
         ariaLabel: Solana 链打赏
         title: "Solana / USDT 打赏支持"
         svg: "ri:cup-line"
-
       - href: "https://github.com/slightyy?tab=repositories"
         ariaLabel: GitHub
         title: GitHub
         svg: "ri:github-line"
-
       - href: "https://space.bilibili.com/256632366?spm_id_from=333.1007.0.0"
         ariaLabel: 哔哩哔哩
         title: 哔哩哔哩
         svg: "ri:bilibili-line"
-
       - href: "https://x.com/baggins69339049"
         ariaLabel: X 平台
-        title: X（Twitter）
+        title: X (Twitter)
         svg: "ri:twitter-line"

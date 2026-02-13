@@ -1,0 +1,59 @@
+---
+import { Icon } from "astro-icon/components";
+import MainCard from "@/components/MainCard.astro";
+import type { ProjectEntry } from "@/data/projectEntries";
+import { projectEntries } from "@/data/projectEntries";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+  return projectEntries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props as { entry: ProjectEntry };
+const sectionTitle =
+  entry.category === "participated" ? "编程参与项目" : "正在参与的项目";
+---
+
+<BaseLayout title={entry.title}>
+  <MainCard
+    title={entry.title}
+    description={entry.summary}
+    textOverlay="项目详情"
+    infoIcon="lucide:file-text"
+  >
+    <section class="py-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="badge badge-primary badge-outline">{sectionTitle}</div>
+        <a href="/project" class="btn btn-sm btn-outline gap-2">
+          <Icon name="lucide:arrow-left" class="w-4 h-4" />
+          <span>返回项目总览</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="py-4">
+      <div class="card bg-base-200 p-6 space-y-4">
+        <h2 class="text-xl font-bold flex items-center gap-2">
+          <Icon name="lucide:clipboard-list" class="w-5 h-5 text-primary" />
+          <span>项目说明（待补充）</span>
+        </h2>
+        <p class="text-base-content/80">
+          你可以在这个页面补充项目背景、业务目标、技术方案、上线结果和复盘总结。
+        </p>
+        <div class="divider my-0"></div>
+        <ul class="space-y-2 text-base-content/80">
+          <li>项目背景：</li>
+          <li>目标与范围：</li>
+          <li>技术栈：</li>
+          <li>关键实现：</li>
+          <li>结果与指标：</li>
+          <li>下一步计划：</li>
+        </ul>
+      </div>
+    </section>
+  </MainCard>
+</BaseLayout>
+

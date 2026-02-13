@@ -1,0 +1,170 @@
+---
+title: MDX 全组件 Demo
+description: 一篇用于快速验证与参考的 MDX 组件演示文章，覆盖当前博客的全部 MDX 组件。
+pubDate: 2026-02-13
+updated: 2026-02-13
+draft: false
+categories:
+  - automation-workflow
+  - project-review
+tags:
+  - Astro
+  - Frosti
+  - Blog
+  - Project
+---
+
+import Collapse from "../../components/mdx/Collapse.astro";
+import Diff from "../../components/mdx/Diff.astro";
+import Error from "../../components/mdx/Error.astro";
+import FeatureCard from "../../components/mdx/FeatureCard.astro";
+import FriendCard from "../../components/mdx/FriendCard.astro";
+import GitHubStats from "../../components/mdx/GitHubStats.astro";
+import Info from "../../components/mdx/Info.astro";
+import Kbd from "../../components/mdx/Kbd.astro";
+import LinkCard from "../../components/mdx/LinkCard.astro";
+import RepositoryCard from "../../components/mdx/RepositoryCard.astro";
+import Showcase from "../../components/mdx/Showcase.astro";
+import Success from "../../components/mdx/Success.astro";
+import TimeLine from "../../components/mdx/TimeLine.astro";
+import TocCollapse from "../../components/mdx/TocCollapse.astro";
+import Warning from "../../components/mdx/Warning.astro";
+
+# MDX 组件总览示例
+
+这篇文章是一个可直接复制的参考模板，你后续写博客时可以按这里的结构替换内容。
+
+<TocCollapse
+  title="本文目录（示例）"
+  headings={[
+    { id: "#alerts", text: "提醒组件", level: 2 },
+    { id: "#interactive", text: "交互组件", level: 2 },
+    { id: "#cards", text: "卡片组件", level: 2 },
+    { id: "#github", text: "GitHub 组件", level: 2 },
+    { id: "#timeline", text: "时间线组件", level: 2 },
+  ]}
+/>
+
+<h2 id="alerts">提醒组件</h2>
+
+<Info>这是 `Info` 组件，适合放说明和注意事项。</Info>
+
+<Success>这是 `Success` 组件，适合放结果达成或操作成功提示。</Success>
+
+<Warning>这是 `Warning` 组件，适合放风险提示。</Warning>
+
+<Error>这是 `Error` 组件，适合放错误情况或异常说明。</Error>
+
+<h2 id="interactive">交互组件</h2>
+
+### 折叠内容
+
+<Collapse title="点我展开：这里是折叠内容示例">
+  这里可以放实现思路、代码片段说明、部署备注等不想默认展开的内容。
+</Collapse>
+
+### 键盘按键
+
+请按 <Kbd>Ctrl</Kbd> + <Kbd>S</Kbd> 保存，再按 <Kbd>Ctrl</Kbd> + <Kbd>F5</Kbd> 强刷页面。
+
+### 图片对比
+
+<Diff l="/image/l.png" r="/image/r.png" leftAlt="改造前" rightAlt="改造后" />
+
+<h2 id="cards">卡片组件</h2>
+
+### 功能卡片
+
+<div class="not-prose grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <FeatureCard
+    title="自动化流程"
+    description="用统一流程把采集、清洗、可视化串起来，减少重复手工操作。"
+    icon="lucide:workflow"
+    color="oklch(0.72 0.18 155)"
+  />
+  <FeatureCard
+    title="可观测看板"
+    description="给关键指标设置可追踪的视图，便于每周复盘。"
+    icon="lucide:bar-chart-3"
+    color="oklch(0.68 0.2 250)"
+  />
+</div>
+
+### 朋友卡片
+
+<div class="not-prose grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <FriendCard
+    name="Demo Friend"
+    avatar="https://github.com/slightyy.png"
+    description="这是友链卡片示例，可用于朋友、技术伙伴或贡献者展示。"
+    url="https://github.com/slightyy"
+    type="friend"
+  />
+  <FriendCard
+    name="Demo Contributor"
+    avatar="https://github.com/withastro.png"
+    description="这里演示 contributor 类型样式。"
+    url="https://github.com/withastro"
+    type="contributor"
+  />
+  <FriendCard
+    name="Demo Tech"
+    avatar="https://github.com/tailwindlabs.png"
+    description="这里演示 tech 类型样式。"
+    url="https://github.com/tailwindlabs"
+    type="tech"
+  />
+</div>
+
+### 链接卡片
+
+<div class="not-prose grid grid-cols-1 md:grid-cols-2 gap-4">
+  <LinkCard
+    title="Astro 文档"
+    desc="官方文档入口，适合快速查 API 与最佳实践。"
+    url="https://docs.astro.build"
+    icon="simple-icons:astro"
+    categories={["文档", "框架"]}
+  />
+  <LinkCard
+    title="Tailwind CSS 文档"
+    desc="样式系统与工具类速查。"
+    url="https://tailwindcss.com/docs"
+    icon="simple-icons:tailwindcss"
+    categories={["样式", "UI"]}
+  />
+</div>
+
+### 站点徽章
+
+<div class="not-prose flex flex-wrap gap-3">
+  <Showcase name="Astro" url="https://astro.build" />
+  <Showcase name="GitHub" url="https://github.com" />
+</div>
+
+<h2 id="github">GitHub 组件</h2>
+
+### 仓库统计卡片
+
+<GitHubStats username="slightyy" repositoryName="astroblog" showCommitGraph={true} />
+
+### 仓库卡片
+
+<div class="not-prose grid grid-cols-1 md:grid-cols-2 gap-4">
+  <RepositoryCard repo="slightyy/astroblog" isPinned={true} />
+  <RepositoryCard repo="withastro/astro" />
+</div>
+
+<h2 id="timeline">时间线组件</h2>
+
+<TimeLine
+  items={[
+    { year: "2024", event: "博客初始化并上线首个版本" },
+    { year: "2025", event: "补充项目页、搜索与分类结构" },
+    { year: "2026", event: "整理 MDX 全组件示例，形成长期模板" },
+  ]}
+/>
+
+---
+
+以上就是全部 MDX 组件的演示。你后面写正式博客时，可以直接复制这篇文件再改标题、分类、标签和正文内容。

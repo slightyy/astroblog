@@ -79,7 +79,7 @@ import { Icon } from "astro-icon/components";
         if (searchContainer) {
           searchContainer.innerHTML = `
             <div class="alert alert-error shadow-lg">
-              搜索功能加载失败，请稍后再试。
+              搜索索引未就绪或加载失败。请先在项目根目录运行 npm run search:index，然后刷新本页。
             </div>
           `;
         }

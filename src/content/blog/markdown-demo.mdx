@@ -1,0 +1,79 @@
+---
+title: Markdown + MDX Demo
+description: 一篇同时演示 Markdown 语法与 MDX 组件用法的示例文章。
+pubDate: 2026-02-13
+updated: 2026-02-13
+draft: false
+categories:
+  - project-review
+tags:
+  - Markdown
+  - Astro
+  - Blog
+---
+
+import Collapse from "../../components/mdx/Collapse.astro";
+import Info from "../../components/mdx/Info.astro";
+import Success from "../../components/mdx/Success.astro";
+import Warning from "../../components/mdx/Warning.astro";
+import Error from "../../components/mdx/Error.astro";
+import Kbd from "../../components/mdx/Kbd.astro";
+import LinkCard from "../../components/mdx/LinkCard.astro";
+import TimeLine from "../../components/mdx/TimeLine.astro";
+
+# Markdown + MDX Demo
+
+这篇是你要的 demo：主体是 Markdown，同时插入了 MDX 组件。
+
+## 1. Markdown 基础
+
+- 无序列表
+- **加粗**
+- `inline code`
+
+```bash
+npm run dev
+```
+
+> 这是 Markdown 引用示例。
+
+## 2. MDX 提示组件
+
+<Info>这是 `Info` 组件。</Info>
+
+<Success>这是 `Success` 组件。</Success>
+
+<Warning>这是 `Warning` 组件。</Warning>
+
+<Error>这是 `Error` 组件。</Error>
+
+## 3. MDX 交互组件
+
+<Collapse title="点击展开：项目复盘要点">
+  1. 背景与目标  
+  2. 实施过程  
+  3. 问题与修复  
+  4. 下阶段计划
+</Collapse>
+
+常用快捷键：<Kbd>Ctrl</Kbd> + <Kbd>S</Kbd> 保存，<Kbd>Ctrl</Kbd> + <Kbd>F5</Kbd> 强制刷新。
+
+## 4. MDX 卡片组件
+
+<LinkCard
+  title="Astro 文档"
+  desc="官方文档入口，适合查语法与配置。"
+  url="https://docs.astro.build"
+  icon="simple-icons:astro"
+  categories={["文档", "参考"]}
+/>
+
+## 5. MDX 时间线组件
+
+<TimeLine
+  items={[
+    { year: "2024", event: "项目启动与技术选型" },
+    { year: "2025", event: "核心功能上线并迭代" },
+    { year: "2026", event: "复盘沉淀为标准模板" },
+  ]}
+/>

@@ -12,8 +12,8 @@ en:
     archivePage: Archives
     totalPosts: Total Posts
     link: "Link: "
-    prevPage: Recent posts
-    nextPage: Older posts
+    prevPage: 最近文章
+    nextPage: 更早文章
     wordCount: words
     readTime: minutes
     share: Share

@@ -8,9 +8,10 @@ import {
   getCategoriesWithPosts,
   getCategoryColorClass,
 } from "@utils/blogUtils";
-import { getCategoryLabel } from "@utils/taxonomyLabel";
 import dayjs from "@utils/dayjs";
+import { getCategoryLabel } from "@utils/taxonomyLabel";
 import { Icon } from "astro-icon/components";
+import { MAIN_BLOG_CATEGORIES } from "@/data/blogCategories";
 
 // 获取所有博客文章
 const allPosts = await getAllPosts();
@@ -18,20 +19,17 @@ const allPosts = await getAllPosts();
 // 提取所有分类并按分类对文章进行分组
 const categoryMap = getCategoriesWithPosts(allPosts);
 
-// 转换为数组并按字母顺序排序
-const categoryEntries = Array.from(categoryMap.entries());
-categoryEntries.sort((a, b) => a[0].localeCompare(b[0]));
-
-// 对每个分类中的文章按日期排序（最新的排在前面）
-categoryEntries.forEach(([_, posts]) => {
+const categoryEntries = MAIN_BLOG_CATEGORIES.map((category) => {
+  const posts = [...(categoryMap.get(category.key) || [])];
   posts.sort(
     (a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
       new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime(),
   );
+  return [category.key, posts] as const;
 });
 
 // 统计总分类数
-const totalCategories = categoryMap.size;
+const totalCategories = MAIN_BLOG_CATEGORIES.length;
 ---
 
 <BaseLayout title="分类">
@@ -52,26 +50,42 @@ const totalCategories = categoryMap.size;
   </BaseCard>
   <BaseCard title="分类">
     <div class="categories-container">
-      {
-        categoryEntries.length > 0 ? (
-          <div class="categories-grid">
-            {categoryEntries.map(([category, posts], index) => (
-              <div class="category-card" data-index={index}>
-                <div class={`category-inner ${getCategoryColorClass(index)}`}>
-                  <div class="category-header" data-category={category}>
-                    <div class="category-title">
-                      <div class="category-icon">
-                        <Icon name="lucide:folder" />
-                      </div>
-                      <h2>{getCategoryLabel(category)}</h2>
-                      <span class="category-count">{posts.length}</span>
-                    </div>
-                    <button class="toggle-btn" aria-label="展开或收起分类内容">
-                      <Icon name="ri:arrow-down-s-line" class="toggle-icon" />
-                    </button>
+      <div class="mb-4">
+        <a href="/blog" class="category-card block">
+          <div class="category-inner category-primary">
+            <div class="category-header">
+              <div class="category-title">
+                <div class="category-icon">
+                  <Icon name="lucide:book-open" />
+                </div>
+                <h2>全部文章</h2>
+                <span class="category-count">{allPosts.length}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="categories-grid">
+        {categoryEntries.map(([category, posts], index) => (
+          <div class="category-card" data-index={index}>
+            <div class={`category-inner ${getCategoryColorClass(index)}`}>
+              <div class="category-header" data-category={category}>
+                <div class="category-title">
+                  <div class="category-icon">
+                    <Icon name="lucide:folder" />
                   </div>
-                  <div class="category-content scrollbar-none">
-                    <div class="category-divider" />
+                  <h2>{getCategoryLabel(category)}</h2>
+                  <span class="category-count">{posts.length}</span>
+                </div>
+                <button class="toggle-btn" aria-label="展开或收起分类内容">
+                  <Icon name="ri:arrow-down-s-line" class="toggle-icon" />
+                </button>
+              </div>
+              <div class="category-content scrollbar-none">
+                <div class="category-divider" />
+                {
+                  posts.length > 0 ? (
                     <ul class="post-list">
                       {posts.map((post) => (
                         <li class="post-item">
@@ -82,18 +96,15 @@ const totalCategories = categoryMap.size;
                         </li>
                       ))}
                     </ul>
-                  </div>
-                </div>
+                  ) : (
+                    <p class="opacity-70 py-2">该分类下暂时还没有文章。</p>
+                  )
+                }
               </div>
-            ))}
+            </div>
           </div>
-        ) : (
-          <div class="empty-state">
-            <Icon name="ri:emotion-sad-line" class="empty-icon" />
-            <p class="empty-text">暂无分类</p>
-          </div>
-        )
-      }
+        ))}
+      </div>
     </div>
   </BaseCard>
 </BaseLayout>
