@@ -1,223 +1,140 @@
-<pre align="center">
-A clean, elegant, and fast static blog template! 🚀 Built with Astro
-</pre>
+# astroblog
 
-<div align="center">
-<img alt="Frosti Logo" src="https://github.com/EveSunMaple/Frosti/blob/main/docs/logo.png" width="280px">
-</div>
+一个基于 Astro + Frosti 定制的个人静态博客项目。  
+仓库地址：`https://github.com/slightyy/astroblog`
 
-[![license](https://badgen.net/github/license/EveSunMaple/Frosti)](https://github.com/EveSunMaple/Frosti/blob/main/LICENSE)&nbsp;&nbsp;&nbsp;[![release](https://badgen.net/github/release/EveSunMaple/Frosti)](https://github.com/EveSunMaple/Frosti/releases)&nbsp;&nbsp;&nbsp;[![stackblitz](https://developer.stackblitz.com/img/open_in_stackblitz_small.svg)](https://stackblitz.com/github/EveSunMaple/Frosti)
+## 项目简介
 
-[**🖥️ Frosti Demo**](https://frosti.saroprock.com)&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;[**🌏 Chinese README**](https://github.com/EveSunMaple/Frosti/blob/main/docs/README.zh-CN.md)&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;[**❤️ My Blog**](https://www.saroprock.com)
+本项目用于个人博客与项目展示，当前已包含：
 
-## 📷 Preview
+- 文章系统（Markdown / MDX）
+- 分类、标签、归档、搜索
+- 项目页面（项目经历、进行中项目等）
+- 响应式布局与明暗主题
+- GitHub 静态托管 + Vercel 部署
 
-![preview](./docs/preview-light.png)
+## 技术栈
 
-## ✨ Features
+- `Astro`
+- `Tailwind CSS`
+- `daisyUI`
+- `Pagefind`（站内搜索）
+- `MDX`
 
-- ✅ **Light** / **Dark** mode available
-- ✅ Super fast performance with excellent SEO
-- ✅ View transition animations (using ClientRouter)
-- ✅ Search functionality for your articles (using Pagefind)
-- ✅ Responsive design built with [Tailwind CSS](https://tailwindcss.com/) and [daisyUI](https://daisyui.com/)
-- ✅ RSS feed support
-- 🛠️ Easy to use blog
-  - Customize your blog content in `frosti.config.yaml`
+## 本地开发
 
-## ✒️ Article Information
+### 1. 安装依赖
 
-|    Name     |       Meaning       | Required |
-| :---------: | :-----------------: | :------: |
-|    title    |    Article title    |   Yes    |
-| description | Article description |   Yes    |
-|   pubDate   |  Publication date   |   Yes    |
-|    image    | Article cover image |    No    |
-| categories  | Article categories  |    No    |
-|    tags     |    Article tags     |    No    |
-|    badge    |    Article badge    |    No    |
-|    draft    |    Draft status     |    No    |
-
-> [!TIP]
->
-> - You can pin your article by setting the `badge` property to `Pin`
-> - Setting `draft: true` will mark the article as a draft, and it won't appear in the article list
-
-## ⬇️ Usage
-
-1. Install pnpm package manager (if you haven't already)
-
-```sh
-npm i -g pnpm
+```bash
+npm install
 ```
 
-2. Clone the project
+### 2. 生成搜索索引（首次或文章更新后建议执行）
 
-```sh
-git clone https://github.com/EveSunMaple/Frosti.git Frosti
+```bash
+npm run search:index
 ```
 
-3. Enter the project folder
+### 3. 启动开发环境
 
-```sh
-cd Frosti
+```bash
+npm run dev
 ```
 
-4. Install dependencies
+默认访问：`http://localhost:4321`
 
-```sh
-pnpm i
+## 常用命令
+
+```bash
+# 开发
+npm run dev
+
+# 构建
+npm run build
+
+# 预览构建结果
+npm run preview
+
+# 清理搜索相关产物
+npm run search:clean
+
+# 重新生成搜索索引
+npm run search:index
 ```
 
-### 5. Debug and Run the Project
+## 目录说明
 
-**On first run or after updating content**, execute `search:index` to generate the search index:
-
-```sh
-# Generate the search index for development use
-pnpm run search:index
-
-pnpm run dev
+```text
+src/
+  content/
+    blog/                 # 博客文章（.md/.mdx）
+  pages/
+    blog/                 # 文章列表、分类、标签、搜索等页面
+    project.astro         # 项目总览页
+    project/              # 各项目详情页（可继续新增）
+  components/             # 组件
+frosti.config.yaml        # 站点配置（菜单、社交链接、主题等）
+public/                   # 静态资源
 ```
 
-## 🔧 Configuration
+## 如何写新文章
 
-Frosti uses `frosti.config.yaml` as its configuration file, where you can configure the website's basic information, navigation bar, footer, and more.
+请在 `src/content/blog` 下新建 `.md` 或 `.mdx` 文件。
 
-### Website Basic Information (site)
+示例 Frontmatter：
 
 ```yaml
-site:
-  tab: Frosti # Text displayed in the browser tab
-  title: Frosti # Website title
-  description: A clean, elegant, and fast static blog template! # Website description for SEO
-  language: en # Website language code, e.g., "en" for English, "zh" for Chinese
-  favicon: /favicon.ico # Website favicon path
+---
+title: 文章标题
+description: 文章描述
+pubDate: 2026-02-13
+updated: 2026-02-13
+draft: false
+categories:
+  - project-review
+tags:
+  - Astro
+  - Blog
+---
 ```
 
-### Theme Settings (theme)
+说明：
 
-```yaml
-theme:
-  light: winter # Light mode theme, based on daisyUI themes
-  dark: dracula # Dark mode theme, based on daisyUI themes
-  code: github-dark # Code block theme style
+- `draft: true` 时文章不会在正式环境列表中显示
+- `categories` 和 `tags` 用于分类页和标签页聚合
+- 使用 MDX 时可在文内直接 `import` 组件
+
+## 搜索功能说明
+
+本项目搜索依赖 Pagefind 索引。若页面提示搜索失败，请执行：
+
+```bash
+npm run search:index
 ```
 
-- Themes are based on options provided by [daisyUI](https://daisyui.com/docs/themes/)
-- Code block themes use styles from [Shiki](https://shiki.style/themes)
+然后刷新页面即可。
 
-### Date Format (date_format)
+## 部署说明（GitHub + Vercel）
 
-```yaml
-date_format: ddd MMM DD YYYY # Date display format
-```
+你当前是本地写作后推送仓库的方式，推荐流程：
 
-### Menu Configuration (menu)
+1. 本地完成内容更新
+2. 执行 `npm run build`（可选但建议）
+3. `git add . && git commit -m "update blog" && git push`
+4. Vercel 自动拉取并部署
 
-```yaml
-menu:
-  - id: home # Unique identifier for the menu item
-    text: Home # Text displayed in the menu
-    href: / # Link address
-    svg: "material-symbols:home-outline-rounded" # Icon
-    target: _self # Link target
-```
+如果你改动了大量文章，部署前可先执行一次 `npm run search:index` 做本地验证。
 
-Each menu item includes the following properties:
+## 个性化配置
 
-- `id`: Unique identifier
-- `text`: Displayed text
-- `href`: Link address
-- `svg`: Icon code using [Iconify](https://icon-sets.iconify.design/) icon set
-- `target`: Link target (`_self` for current window or `_blank` for new window)
+站点主要配置文件为 `frosti.config.yaml`，可修改：
 
-#### Sub-menu Items (subItems)
+- 站点标题、描述、语言、主题
+- 顶部/侧边菜单
+- 个人信息与社交链接
+- 首页与页脚展示内容
 
-You can configure sub-menu items by adding `subItems` with the same format as main menu items.
+## 许可证
 
-### User Information (user)
+项目沿用仓库中的 `LICENSE`。
 
-```yaml
-user:
-  name: EveSunMaple # Username
-  site: "https://example.com" # User website
-  avatar: /profile.png # User avatar
-```
-
-### Social Media Configuration (social)
-
-Sidebar and footer can have different social media links:
-
-```yaml
-sidebar:
-  social:
-    - href: "https://github.com/username" # Link address
-      ariaLabel: Github # Accessibility label
-      title: Github # Tooltip on hover
-      svg: "ri:github-line" # Icon code
-```
-
-### Icon Settings (icon)
-
-Frosti uses [Iconify](https://icon-sets.iconify.design/) as its icon library. You can search for icons you like on their website, then copy the icon code to the `svg` field in the configuration file.
-
-### Language Settings (language)
-
-Frosti supports multiple languages, configured through:
-
-1. Setting the default language in `frosti.config.yaml`:
-
-```yaml
-site:
-  language: en # Set to "en" for English, "zh" for Chinese
-```
-
-2. Managing all interface text translations in the `src/i18n/translations.yaml` file:
-
-```yaml
-en: # English translations
-  label:
-    noTag: No tags assigned
-    tagCard: Tags
-    # Other English labels...
-
-zh: # Chinese translations
-  label:
-    noTag: 未分配标签
-    tagCard: 标签
-    # Other Chinese labels...
-```
-
-#### Adding or Modifying Translations
-
-To add new language support or modify existing translations:
-
-1. Add a new language code and corresponding translations in the `translations.yaml` file, or modify existing translations
-2. Change `site.language` in `frosti.config.yaml` to your preferred language code
-
-## 🚀 Automatic Updates
-
-To keep your project up to date with the latest version of Frosti, you can use the provided update script.
-
-```sh
-bash frosti.update.sh
-```
-
-This script will:
-
-1.  **Clone the latest version** of the Frosti repository.
-2.  **Safely update** your project files, adding and overwriting files based on the `.updateignore` file.
-3.  **Intelligently delete** files that have been removed from the official repository, without affecting your ignored files.
-4.  **Clean up** any remaining empty folders and temporary files.
-5.  **Install or update** dependencies using `pnpm`.
-
-## 👀 Issues
-
-If you have any questions or suggestions, you can provide feedback or communicate with the developer by submitting Issues!
-
-## 🎉 Acknowledgements
-
-@[Saicaca](https://github.com/saicaca) Their inspiration was the main reason I created this theme
-
-@[WRXinYue](https://github.com/WRXinYue) They helped me a lot when I was first getting started
