@@ -76,7 +76,7 @@ const currentPath = Astro.url.pathname;
       <div class="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-2 justify-items-center">
         {
           USER_SIDEBAR_SOCIAL_ICONS.map((icon) => (
-            <div class="tooltip tooltip-bottom" data-tip={icon.title}>
+            <div class="tooltip tooltip-top" data-tip={icon.title}>
               <a
                 tabindex="0"
                 href={icon.href}

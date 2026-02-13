@@ -1,5 +1,4 @@
----
-import { t } from "@config";
+﻿---
 import { Icon } from "astro-icon/components";
 import Card from "../temple/Card.astro";
 ---
@@ -11,19 +10,16 @@ import Card from "../temple/Card.astro";
         <input
           type="text"
           name="q"
-          placeholder={t("label.search") || "搜索..."}
-          class="input input-bordered liquid-input w-full pl-10 pr-16 py-2"
-          aria-label={t("label.search") || "搜索"}
+          placeholder="搜索"
+          class="input input-bordered liquid-input w-full h-12 pl-4 pr-14 text-base"
+          aria-label="搜索"
         />
-        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <Icon name="lucide:search" class="w-5 h-5" />
-        </div>
         <button
           type="submit"
-          class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-lg liquid-action-btn"
-          aria-label={t("label.search") || "搜索"}
+          class="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-lg liquid-action-btn sidebar-search-submit flex items-center justify-center"
+          aria-label="搜索"
         >
-          <Icon name="lucide:arrow-right" class="w-4 h-4" />
+          <Icon name="lucide:search" class="w-4 h-4" />
         </button>
       </div>
     </form>
@@ -43,3 +39,19 @@ import Card from "../temple/Card.astro";
     }
   });
 </script>
+
+<style is:inline>
+  .search-container {
+    position: relative;
+  }
+
+  .sidebar-search-submit {
+    position: absolute !important;
+    right: 0.5rem !important;
+    left: auto !important;
+    top: 50% !important;
+    bottom: auto !important;
+    transform: translateY(-50%) !important;
+    z-index: 2;
+  }
+</style>

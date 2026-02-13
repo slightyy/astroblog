@@ -26,7 +26,7 @@ import { Icon } from "astro-icon/components";
 ---
 
 <div
-  class="not-prose card bg-base-100 shadow-md hover:shadow-xl transition-all duration-300 ease-in-out hover:-translate-y-1 animate-fade-in-up border border-base-200"
+  class="not-prose card glass-card bg-transparent transition-all duration-300 ease-in-out hover:-translate-y-0.5 animate-fade-in-up"
 >
   <a
     href={url}
@@ -84,11 +84,6 @@ import { Icon } from "astro-icon/components";
 </div>
 
 <style>
-  .card {
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(var(--color-border), 0.1);
-  }
-
   @keyframes fadeInUp {
     from {
       opacity: 0;

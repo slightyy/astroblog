@@ -54,8 +54,8 @@ user:
   sidebar:
     social:
       - href: "/donate"
-        ariaLabel: Solana 链打赏
-        title: "Solana / USDT 打赏支持"
+        ariaLabel: 打赏
+        title: 打赏
         svg: "ri:cup-line"
       - href: "https://github.com/slightyy?tab=repositories"
         ariaLabel: GitHub
@@ -73,8 +73,8 @@ user:
   footer:
     social:
       - href: "/donate"
-        ariaLabel: Solana 链打赏
-        title: "Solana / USDT 打赏支持"
+        ariaLabel: 打赏
+        title: 打赏
         svg: "ri:cup-line"
       - href: "https://github.com/slightyy?tab=repositories"
         ariaLabel: GitHub
