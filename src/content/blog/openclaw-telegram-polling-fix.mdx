@@ -1,5 +1,5 @@
 ---
-title: 解决 OpenClaw Telegram Polling 不接收消息的问题
+title: 解决 OpenClaw Telegram Polling 收不到消息的问题
 description: 记录一次 OpenClaw 更换 Telegram bot 后无法接收消息的排查过程，定位到是 polling offset 状态未重置导致的隐式问题。
 pubDate: 2026-02-18
 updated: 2026-02-18
@@ -12,74 +12,86 @@ tags:
   - 排障
 ---
 
-在配置 OpenClaw 的过程中，我遇到了一次 Telegram polling 无法接收消息的问题，起因并不复杂，但定位花了一些时间，主要是因为状态本身没有任何明显异常。
+这次在配置 OpenClaw 的过程中，我遇到了 Telegram polling 收不到消息的问题。问题本身并不复杂，但卡住的时间不短，主要原因是系统表面上没有任何异常。
 
-## 背景
+## 起点
 
-我最初的目标是使用第三方 AI API 接入 OpenClaw，而不是默认的 Codex 订阅。但在安装阶段误点了 Codex 的订阅流程，并完成了一次 Telegram bot 的绑定。这个状态下 OpenClaw 实际已经正常运行过一段时间，包括 Telegram polling 也确实收过消息。
+事情始于一次安装时的误操作。我原本是想用第三方的 AI API 接入 OpenClaw，而不是默认的 Codex。但在最初的安装流程里点错了步骤，把 Codex 的订阅装上了，同时也顺手绑定了一个 Telegram bot。那一套配置当时是能正常跑的，Telegram polling 也确实收过消息。
 
-后来我重新梳理配置，决定放弃 Codex，转而在 OpenClaw onboard 阶段重新配置第三方 AI API。同时，我也重新创建并绑定了新的 Telegram bot，并把原来的私聊/群组关系一并调整。表面上这是一次"干净的重新配置"，但实际上 OpenClaw 的本地状态并没有完全被重置。
+后来我意识到订阅装错了，就重新梳理了一遍配置。在 openclaw onboard 里去掉 Codex，换成第三方 AI API；Telegram 这边也重新创建了一个 bot，把原来的私聊和群组关系重新绑定了一遍。从操作上看，这更像是一次"重来"，而不是在原配置上打补丁。
 
 ## 问题现象
 
-重新配置完成后，Control UI 中 Telegram channel 的状态看起来一切正常：
+重新配置完成后，OpenClaw 启动正常，Gateway 能访问，Control UI 里 Telegram channel 的状态看起来也都对：
 
-- channel 显示为已配置、运行中
-- 模式为 polling
+- polling 模式
 - probe 通过
-- webhook 为空（符合 polling 预期）
+- webhook 为空（符合 polling 的预期）
 
-Gateway 也可以正常访问，日志中没有报错。但不论是在 Telegram 中私聊 bot，还是在已经绑定的群组中发送消息，OpenClaw 都没有任何反应。
+日志里没有报错，系统没有任何"红灯"。
 
-在 channel status 中可以看到，**lastInboundAt 一直为 null**。同时，通过 `openclaw logs --follow` 或 channel 相关日志，都看不到任何 Telegram inbound 的记录。
+但不管我是在 Telegram 里私聊新 bot，还是在已经绑定的群组里发消息，OpenClaw 都没有任何反应。
 
-## 排查过程
+- channel status 里 **lastInboundAt 一直是 null**
+- `openclaw logs --follow` 里看不到任何 Telegram inbound
+- 但同时又没有 error
 
-最初我以为是以下问题：
+## 排查
 
-- Telegram bot 权限问题
-- 群组隐私设置
-- 网络问题
-
-为了确认 Telegram 本身是否有问题，我直接使用官方 API 验证了当前 bot token，通过 getUpdates 可以正常访问接口。在部分情况下，发送 `/start` 后也能看到更新返回。这基本可以排除 token 无效或 Telegram API 不可达的问题。
+一开始我怀疑的是 Telegram 本身，比如 bot 权限、群组隐私设置、是不是没加管理员之类的。为了确认这条线，我直接用当前 bot token 调了 Telegram 官方的 getUpdates。接口是通的，在某些情况下，给 bot 发 /start 也能看到返回结果。这基本可以确认 token 没问题，Telegram API 也不是不可达。
 
 ## 真正的原因
 
-真正的问题出在 OpenClaw 本地的 polling 状态上。
+真正的问题，其实在 OpenClaw 本地保存的 polling 状态上。
 
-在 polling 模式下，OpenClaw 会把 Telegram 的 update offset 持久化存储到本地目录中，路径位于：
+OpenClaw 在 polling 模式下，会把 Telegram 的 update offset 持久化存到本地。文件在：
 
 ```
 ~/.openclaw/telegram/update-offset-<accountId>.json
 ```
 
-在我这个场景里，之前误安装 Codex 并绑定 Telegram 时，OpenClaw 已经用旧的 bot 跑过 polling，并把当时的 lastUpdateId 写入了 offset 文件。之后即便我在 onboard 阶段重新绑定了新的 Telegram bot（新的 token、新的 bot id），但仍然沿用了同一个 accountId（默认的 `default`），**这个 offset 文件并不会自动重置**。
+这一步在正常情况下没有任何问题，但结合我的操作路径，就会出事。
 
-结果就是，OpenClaw 在 polling 时继续使用一个来自"旧 bot"的 offset，而这个 offset 对于"新 bot"来说已经完全不合理。Telegram 的 getUpdates 只会返回 `update_id > offset` 的更新，于是 Telegram 返回空结果，OpenClaw 表现为 polling 正常、probe 正常，但始终没有任何 inbound 消息。
+我之前用"旧 bot"跑过 OpenClaw，polling 正常工作过，OpenClaw 也就记录下了一个当时的 lastUpdateId。后来我换了一个全新的 Telegram bot 和 token，但 OpenClaw 仍然使用同一个 accountId（默认的 `default`），**这个 offset 文件并不会自动清掉**。
 
-## 解决方法
+关键就在这里：新 bot 的 update_id 是从很小的数开始往上走的，但 OpenClaw 还拿着旧 bot 的 offset 继续 poll。于是就出现了那种很直观的一句话解释——OpenClaw 实际上是在问：
 
-手动重置 Telegram 的 update offset 状态：
+> "有没有 update_id > 9000000？"
+
+Telegram 的回答只能是："没有。"
+
+所以它就会一直返回空集合，OpenClaw 这边表现为 polling 在跑、probe ok、webhook 空，但永远没有 inbound，lastInboundAt 一直是 null。
+
+## 解决
+
+确认这一点之后，处理就很直接了。
+
+我先看了一眼本地 offset 文件，确认它确实存在：
 
 ```bash
-# 检查本地 offset 文件
 ls -la ~/.openclaw/telegram
 cat ~/.openclaw/telegram/update-offset-default.json
+```
 
-# 移走做备份
+然后把这个文件挪走，留一份备份：
+
+```bash
 mv ~/.openclaw/telegram/update-offset-default.json \
    ~/.openclaw/telegram/update-offset-default.json.bak
+```
 
-# 重启 gateway
+接着重启 gateway：
+
+```bash
 openclaw gateway stop
 openclaw gateway
 ```
 
-重启完成后，在 Telegram 中重新给 bot 发送一条消息，再查看 channel status，可以看到 **lastInboundAt 正常更新**，日志中也出现了 Telegram inbound 的记录，消息能够顺利进入 agent 层。
+重启之后，再给 Telegram 里的新 bot 发一条消息，channel status 里的 lastInboundAt 就会更新，日志里也能看到 Telegram inbound，消息能进到 agent 层。
 
-## 经验总结
+## 总结
 
-回头看这次问题，本质上并不是 Telegram、网络或第三方 AI API 的问题，而是一次"配置流程中断 + 本地状态复用"导致的隐式状态不一致。
+这次问题本质上不是 Telegram、网络或第三方 AI API 的问题，而是一次"配置流程中断 + 本地状态复用"导致的隐式状态不一致。
 
 只要在同一个 OpenClaw accountId 下更换过 Telegram bot，无论是误操作、重配还是切换订阅，都有可能遇到同样的情况。
 
