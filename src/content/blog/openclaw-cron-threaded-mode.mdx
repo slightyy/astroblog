@@ -14,7 +14,7 @@ tags:
 
 # Threaded Mode 下定时任务配置教程
 
-之前写了两篇关于 Openclaw 任务隔离的文章，有朋友在配置定时任务时遇到问题。详细研究了一下，把过程记录下来。
+之前写了两篇关于 Openclaw 任务隔离的文章，自己在配置定时任务时遇到一些问题。详细研究了一下，把过程记录下来。
 
 ## 问题来源
 
@@ -52,31 +52,45 @@ Openclaw 会自动帮你完成：查询 Thread ID、配置权限、创建定时�
 
 ### 常用话术模板
 
+**完整流程（获取 Thread ID + 设置任务）**
+
+```
+你是 Telegram 设置的 Threaded Mode 下的一个子话题。
+1. 请先告诉我这个话题的 Thread ID 是多少
+2. 然后帮我设置一个每小时执行一次的定时任务
+3. 任务内容：查询当前天气情况并发送到群聊
+4. 每次汇报都在这个 Thread ID 下面进行
+```
+
 **每小时汇报**
 
 ```
 我需要在当前话题配置一个每小时执行一次的定时任务。
-任务内容：查询 AVAX 合约当前价格并发送到群聊
-请帮我配置并确保权限正确。
+任务内容：查询当前天气情况并发送到群聊
+请帮我：
+1. 获取当前话题的 Thread ID
+2. 配置定时任务，每次在这个 Thread ID 下执行
 ```
 
 **每日汇报**
 
 ```
 配置一个每天早上6点的定时任务。
-任务内容：查询 AVAX 合约过去24小时行情数据
-目标：当前话题
+任务内容：查询明天天气情况
+请获取当前话题的 Thread ID 并设置任务
 ```
 
 **提醒任务**
 
 ```
 创建一个每天晚上8点的提醒任务。
-任务内容：提醒我提交博客
-在当前话题执行
+任务内容：提醒我喝水
+在当前话题执行，并告诉我这个话题的 Thread ID
 ```
 
 ---
+
+一般来说，上面的自动配置步骤会自动进行，Openclaw 会帮你完成配置。但如果有人想尝试手动配置，或者想了解在 JSON 文件中是如何修改的，可以参考以下步骤（当然，还是推荐使用上面的自动配置步骤）：
 
 ## 手动配置步骤
 
@@ -144,13 +158,13 @@ openclaw cron add \
 到 Thread 1114：
 
 ```
-openclaw cron add --cron "0 * * * *" --tz "Asia/Shanghai" --message "查询 AVAX 合约当前价格" --channel telegram --to "telegram:7121476065:1114" --name "AVAX整点汇报" --session isolated
+openclaw cron add --cron "0 * * * *" --tz "Asia/Shanghai" --message "查询当前天气情况" --channel telegram --to "telegram:7121476065:1114" --name "天气整点汇报" --session isolated
 ```
 
 每天晚上8点到 Thread 1079：
 
 ```
-openclaw cron add --cron "0 20 * * *" --tz "Asia/Shanghai" --message "提醒更新博客" --channel telegram --to "telegram:7121476065:1079" --name "博客提交提醒" --session isolated
+openclaw cron add --cron "0 20 * * *" --tz "Asia/Shanghai" --message "提醒我喝水" --channel telegram --to "telegram:7121476065:1079" --name "喝水提醒" --session isolated
 ```
 
 ### 4. 管理任务
