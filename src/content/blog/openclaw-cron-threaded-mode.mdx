@@ -16,17 +16,71 @@ tags:
 
 之前写了两篇关于 Openclaw 任务隔离的文章，有朋友在配置定时任务时遇到问题。详细研究了一下，把过程记录下来。
 
-## 遇到什么问题
+## 问题来源
 
-在 Threaded Mode 下配置定时任务，默认会收到"沙箱受限无法发送消息"的错误。原因有两个。
+在 Threaded Mode（话题模式）下配置定时任务，默认会发到"新聊天"（All）那个总对话框里，而不是当前子话题。
 
-沙箱限制是第一个。Openclaw 沙箱默认拒绝 cron 工具权限，这是安全考虑，但在定时任务场景下就成了障碍。
+比如你在"博客"话题里想配置一个每天提醒写博客的定时任务，结果消息每次都跑到"新聊天"去了。这就是问题所在。
 
-会话隔离是第二个。线程模式的话题属于独立会话，定时任务被路由到主进程，权限不够，自然发不出去。
+这篇文章的目的就是解决它——让定时任务能发送到正确的独立话题下面。
 
-## 权限配置
+## 最简单的方式：让 Openclaw 帮你配置
 
-这个问题需要修改配置文件才能解决。
+不需要 SSH 到服务器，不需要改配置文件。直接在 Telegram 对话框里发给 Openclaw 就行。
+
+发给 Openclaw 的话术：
+
+```
+我需要在 Threaded Mode（话题模式）下配置定时任务，但遇到沙箱权限受限的问题。
+
+请帮我做以下配置：
+
+1. 修改 ~/.openclaw/openclaw.json，在沙箱配置中：
+   - 从 deny 列表移除 cron，确保 allow 列表包含 cron
+   - 将 sandbox.mode 设为 "all"，sandbox.scope 设为 "session"
+
+2. 在 cron 配置中：
+   - 确保 enabled 为 true
+   - 设置 maxConcurrentRuns 和 sessionRetention
+
+3. 配置完成后执行 openclaw gateway restart
+
+完成后，在当前话题创建一个测试定时任务，验证是否配置成功。
+```
+
+Openclaw 会自动帮你完成：查询 Thread ID、配置权限、创建定时任务。
+
+### 常用话术模板
+
+**每小时汇报**
+
+```
+我需要在当前话题配置一个每小时执行一次的定时任务。
+任务内容：查询 AVAX 合约当前价格并发送到群聊
+请帮我配置并确保权限正确。
+```
+
+**每日汇报**
+
+```
+配置一个每天早上6点的定时任务。
+任务内容：查询 AVAX 合约过去24小时行情数据
+目标：当前话题
+```
+
+**提醒任务**
+
+```
+创建一个每天晚上8点的提醒任务。
+任务内容：提醒我提交博客
+在当前话题执行
+```
+
+---
+
+## 手动配置步骤
+
+### 1. 权限配置
 
 找到 ~/.openclaw/openclaw.json，添加或修改以下内容：
 
@@ -50,13 +104,13 @@ tags:
 }
 ```
 
-改完配置后，重启 Gateway 让配置生效：
+改完配置后，重启 Gateway：
 
 ```
 openclaw gateway restart
 ```
 
-## 查询话题 Thread ID
+### 2. 查询话题 Thread ID
 
 在目标话题发一条消息，然后运行：
 
@@ -72,11 +126,9 @@ for key, val in data.items():
 "
 ```
 
-输出结果就是你要的 Thread ID。比如 Thread ID: 1114。
+### 3. 创建定时任务
 
-## 创建定时任务
-
-命令格式如下：
+关键是把 Thread ID 加到 --to 参数里：
 
 ```
 openclaw cron add \
@@ -89,124 +141,33 @@ openclaw cron add \
   --session isolated
 ```
 
-几个常用场景：
-
-每小时整点汇报价格到 Thread 1114：
+到 Thread 1114：
 
 ```
-openclaw cron add \
-  --cron "0 * * * *" \
-  --tz "Asia/Shanghai" \
-  --message "查询 AVAX 合约当前价格并发送到群聊" \
-  --channel telegram \
-  --to "telegram:7121476065:1114" \
-  --name "AVAX整点汇报" \
-  --session isolated
+openclaw cron add --cron "0 * * * *" --tz "Asia/Shanghai" --message "查询 AVAX 合约当前价格" --channel telegram --to "telegram:7121476065:1114" --name "AVAX整点汇报" --session isolated
 ```
 
-每天 6点和20点汇报：
+每天晚上8点到 Thread 1079：
 
 ```
-openclaw cron add \
-  --cron "0 6,20 * * *" \
-  --tz "Asia/Shanghai" \
-  --message "查询 AVAX 合约过去24小时行情数据" \
-  --channel telegram \
-  --to "telegram:7121476065:1114" \
-  --name "AVAX每日汇报" \
-  --session isolated
+openclaw cron add --cron "0 20 * * *" --tz "Asia/Shanghai" --message "提醒更新博客" --channel telegram --to "telegram:7121476065:1079" --name "博客提交提醒" --session isolated
 ```
 
-每天晚上8点提醒更新博客（Thread 1079）：
-
-```
-openclaw cron add \
-  --cron "0 20 * * *" \
-  --tz "Asia/Shanghai" \
-  --message "提醒更新博客" \
-  --channel telegram \
-  --to "telegram:7121476065:1079" \
-  --name "博客提交提醒" \
-  --session isolated
-```
-
-## 定时任务管理
-
-查看所有定时任务：
+### 4. 管理任务
 
 ```
 openclaw cron list
-```
-
-查看任务详情：
-
-```
-grep -A10 "任务名称" ~/.openclaw/cron/jobs.json
-```
-
-删除定时任务：
-
-```
 openclaw cron rm <任务ID>
 ```
 
-手动运行测试：
-
-```
-openclaw cron run <任务ID>
-```
-
-## 验证配置
-
-检查话题是否收到消息，看日志：
+### 5. 验证
 
 ```
 tail -20 /tmp/openclaw/openclaw-*.log | grep "thread:1114"
 ```
 
-日志里出现 lane=session:agent:main:main:thread:1114 就表示成功发送到对应话题了。
+出现 lane=session:agent:main:main:thread:1114 就表示成功。
 
-## 常见问题
+---
 
-发不到话题里怎么办？确保用 --session isolated 参数，检查上面权限配置是否正确。
-
-不知道 Thread ID 怎么办？在目标话题发消息后查询 sessions.json，方法前面讲过了。
-
-发送到错误话题怎么办？检查 --to 参数格式是否正确，Thread ID 别写错。
-
-## 进阶配置
-
-按话题单独配置权限：
-
-```json
-{
-  "agents": {
-    "list": {
-      "thread:1114": {
-        "sandbox": {
-          "allow": ["cron"]
-        }
-      }
-    }
-  }
-}
-```
-
-限制沙箱资源：
-
-```json
-{
-  "agents": {
-    "defaults": {
-      "sandbox": {
-        "docker": {
-          "memory": "512m",
-          "cpus": 0.5
-        }
-      }
-    }
-  }
-}
-```
-
-按上面步骤配置完，定时任务就能自动发送到对应的 Telegram 话题中了。
+这回可以推送了吗？
