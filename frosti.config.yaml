@@ -4,7 +4,7 @@ site:
   title: 我的博客
   description: 一个清爽、快速、注重阅读体验的静态博客。
   language: en
-  favicon: /favicon.ico
+  favicon: /logo.png
   theme:
     light: winter
     dark: dim
