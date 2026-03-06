@@ -1,0 +1,325 @@
+---
+import { Icon } from "astro-icon/components";
+import MainCard from "@/components/MainCard.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const CONTACT_EMAIL = "chowchow20240101@gmail.com";
+---
+
+<BaseLayout title="联系">
+  <MainCard
+    title="联系我"
+    description="欢迎交流 AI、数据分析、Web3 和项目合作。"
+    infoIcon="lucide:mail"
+    textOverlay="Contact"
+    helpText="联系方式"
+  >
+    <div class="contact-shell">
+      <section class="contact-hero" data-contact-reveal>
+        <div class="contact-badges">
+          <span class="contact-pill">
+            <Icon name="lucide:mail-check" class="w-4 h-4" />
+            <span>Open to Contact</span>
+          </span>
+          <span class="contact-pill">
+            <Icon name="lucide:clock-3" class="w-4 h-4" />
+            <span>通常 24 小时内回复</span>
+          </span>
+        </div>
+
+        <p class="contact-intro">
+          如果你想讨论项目合作、技术问题、内容共创或岗位机会，可以直接通过邮箱联系我。信息越具体，我回复会越快。
+        </p>
+
+        <div class="contact-focus">
+          <div class="contact-focus-item">
+            <Icon name="lucide:sparkles" class="w-4 h-4 text-primary" />
+            <span>AI 应用落地</span>
+          </div>
+          <div class="contact-focus-item">
+            <Icon name="lucide:chart-column" class="w-4 h-4 text-primary" />
+            <span>数据分析与 BI</span>
+          </div>
+          <div class="contact-focus-item">
+            <Icon name="lucide:blocks" class="w-4 h-4 text-primary" />
+            <span>Web3 与开源项目</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact-grid" data-contact-reveal>
+        <article class="contact-card">
+          <div class="contact-card-head">
+            <Icon name="lucide:mail" class="w-5 h-5 text-primary" />
+            <h2>邮箱</h2>
+          </div>
+          <p class="contact-card-desc">优先推荐，适合合作沟通与长内容交流。</p>
+
+          <div class="contact-email-box">
+            <p class="contact-email">{CONTACT_EMAIL}</p>
+          </div>
+
+          <div class="contact-actions">
+            <a href={`mailto:${CONTACT_EMAIL}`} class="btn btn-sm btn-primary gap-2">
+              <Icon name="lucide:send" class="w-4 h-4" />
+              <span>发送邮件</span>
+            </a>
+            <button id="contact-copy-btn" type="button" class="btn btn-sm btn-outline gap-2">
+              <Icon name="lucide:copy" class="w-4 h-4" />
+              <span>复制邮箱</span>
+            </button>
+          </div>
+          <p id="contact-copy-status" class="contact-copy-status" aria-live="polite"></p>
+        </article>
+
+        <article class="contact-card">
+          <div class="contact-card-head">
+            <Icon name="lucide:messages-square" class="w-5 h-5 text-primary" />
+            <h2>其他渠道</h2>
+          </div>
+          <p class="contact-card-desc">快速了解我的最新项目与动态：</p>
+          <div class="contact-actions">
+            <a
+              href="https://github.com/slightyy?tab=repositories"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-sm btn-outline gap-2"
+            >
+              <Icon name="lucide:github" class="w-4 h-4" />
+              <span>GitHub</span>
+            </a>
+            <a
+              href="https://x.com/baggins69339049"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-sm btn-outline gap-2"
+            >
+              <Icon name="lucide:twitter" class="w-4 h-4" />
+              <span>X</span>
+            </a>
+            <a
+              href="https://space.bilibili.com/256632366?spm_id_from=333.1007.0.0"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-sm btn-outline gap-2"
+            >
+              <Icon name="ri:bilibili-line" class="w-4 h-4" />
+              <span>哔哩哔哩</span>
+            </a>
+          </div>
+        </article>
+      </section>
+    </div>
+  </MainCard>
+</BaseLayout>
+
+<script is:inline>
+  document.addEventListener("astro:page-load", () => {
+    const btn = document.getElementById("contact-copy-btn");
+    const status = document.getElementById("contact-copy-status");
+    if (!btn || !status) return;
+
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText("chowchow20240101@gmail.com");
+        status.textContent = "邮箱已复制";
+        btn.classList.add("contact-copy-ok");
+      } catch {
+        status.textContent = "复制失败，请手动复制";
+        btn.classList.remove("contact-copy-ok");
+      }
+
+      window.setTimeout(() => {
+        status.textContent = "";
+        btn.classList.remove("contact-copy-ok");
+      }, 1500);
+    });
+  });
+</script>
+
+<style>
+  .contact-shell {
+    display: grid;
+    gap: 1rem;
+    font-family: var(--font-ui);
+  }
+
+  .contact-hero,
+  .contact-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    border: 1px solid oklch(var(--bc) / 0.14);
+    background:
+      linear-gradient(155deg, oklch(var(--b1) / 0.82), oklch(var(--b2) / 0.66)),
+      radial-gradient(circle at 85% -10%, oklch(var(--p) / 0.14), transparent 40%);
+    box-shadow:
+      0 16px 32px oklch(0 0 0 / 0.14),
+      inset 0 1px 0 oklch(1 0 0 / 0.2);
+  }
+
+  .contact-hero {
+    padding: 1rem;
+  }
+
+  .contact-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .contact-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 999px;
+    border: 1px solid oklch(var(--bc) / 0.2);
+    padding: 0.3rem 0.65rem;
+    font-size: 0.76rem;
+    color: oklch(var(--bc) / 0.85);
+    background: oklch(var(--b1) / 0.6);
+  }
+
+  .contact-intro {
+    margin: 0 0 0.9rem;
+    color: oklch(var(--bc) / 0.8);
+    line-height: 1.82;
+  }
+
+  .contact-focus {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .contact-focus-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 0.6rem;
+    border: 1px solid oklch(var(--bc) / 0.16);
+    background: oklch(var(--b2) / 0.55);
+    font-size: 0.8rem;
+    color: oklch(var(--bc) / 0.78);
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .contact-card {
+    padding: 1rem;
+    transition:
+      transform 0.22s ease,
+      border-color 0.22s ease,
+      box-shadow 0.22s ease;
+  }
+
+  .contact-card:hover {
+    transform: translateY(-2px);
+    border-color: oklch(var(--p) / 0.35);
+    box-shadow:
+      0 18px 34px oklch(0 0 0 / 0.18),
+      inset 0 1px 0 oklch(1 0 0 / 0.22);
+  }
+
+  .contact-card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .contact-card-head h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .contact-card-desc {
+    margin: 0 0 0.85rem;
+    color: oklch(var(--bc) / 0.72);
+    font-size: 0.92rem;
+  }
+
+  .contact-email-box {
+    border: 1px dashed oklch(var(--bc) / 0.25);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+    background: oklch(var(--b1) / 0.42);
+  }
+
+  .contact-email {
+    margin: 0;
+    font-family: ui-monospace, "JetBrains Mono", "Fira Code", "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+    font-size: 0.88rem;
+    color: oklch(var(--bc) / 0.92);
+    word-break: break-all;
+  }
+
+  .contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .contact-copy-status {
+    margin: 0.45rem 0 0;
+    min-height: 1rem;
+    font-size: 0.76rem;
+    color: oklch(var(--su));
+  }
+
+  .contact-copy-ok {
+    border-color: oklch(var(--su) / 0.6) !important;
+  }
+
+  [data-contact-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(3px);
+    animation: contactReveal 0.5s ease forwards;
+  }
+
+  [data-contact-reveal]:nth-of-type(2) {
+    animation-delay: 0.12s;
+  }
+
+  @keyframes contactReveal {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .contact-hero,
+    .contact-card {
+      padding: 1.1rem 1.15rem;
+    }
+
+    .contact-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-card {
+      transition: none;
+    }
+
+    [data-contact-reveal] {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      animation: none;
+    }
+  }
+</style>

@@ -15,23 +15,25 @@ const currentPath = Astro.url.pathname;
 <Card>
   <div class="relative p-4 flex flex-col">
     <div class="p-2 flex justify-center">
-      <Image
-        class="mask mask-circle"
-        format="webp"
-        width={250}
-        height={250}
-        src={USER_AVATAR}
-        alt="Profile"
-        loading="eager"
-      />
+      <div class="frosti-avatar-ring">
+        <Image
+          class="mask mask-circle frosti-avatar"
+          format="webp"
+          width={250}
+          height={250}
+          src={USER_AVATAR}
+          alt="Profile"
+          loading="eager"
+        />
+      </div>
     </div>
-    <ul class="menu bg-transparent w-full m-0 p-0 hidden md:flex flex-col items-center lg:items-start">
+    <ul class="menu bg-transparent w-full m-0 p-0 hidden md:flex flex-col items-center lg:items-start gap-1">
       {
         SITE_MENU.map((item) => (
           <li class="w-full relative group">
             {item.subItems ? (
               <details class="menu-item w-full" data-submenu-id={item.id} open={currentPath.startsWith(item.href)}>
-                <summary class="justify-center lg:justify-start items-center text-center text-xl md:text-3xl lg:text-xl font-bold p-4 hover:bg-base-200 rounded-lg">
+                <summary class="profile-menu-link justify-center lg:justify-start items-center text-center text-xl md:text-3xl lg:text-xl font-bold p-4 rounded-lg">
                   <Icon name={item.svg} />
                   <span class="hidden lg:inline ml-2">{item.text}</span>
                 </summary>
@@ -40,7 +42,7 @@ const currentPath = Astro.url.pathname;
                     <li class="relative">
                       <a
                         tabindex="0"
-                        class="menu-item text-base md:text-2xl lg:text-base font-bold p-2 hover:bg-base-200 rounded-lg"
+                        class="profile-submenu-link menu-item text-base md:text-2xl lg:text-base font-bold p-2 rounded-lg"
                         id={`header-${subItem.id}`}
                         href={subItem.href}
                         target={subItem.target || "_self"}
@@ -56,7 +58,7 @@ const currentPath = Astro.url.pathname;
             ) : (
               <a
                 tabindex="0"
-                class="flex justify-center lg:justify-start items-center text-center text-xl md:text-3xl lg:text-xl font-bold p-4 hover:bg-base-200 rounded-lg"
+                class="profile-menu-link flex justify-center lg:justify-start items-center text-center text-xl md:text-3xl lg:text-xl font-bold p-4 rounded-lg"
                 id={item.id}
                 href={item.href}
                 target={item.target || "_self"}

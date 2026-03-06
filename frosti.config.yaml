@@ -7,7 +7,7 @@ site:
   favicon: /favicon.ico
   theme:
     light: winter
-    dark: dracula
+    dark: dim
     code: github-dark
   date_format: ddd MMM DD YYYY
   blog:
@@ -40,14 +40,14 @@ site:
       target: _self
     - id: contact
       text: 联系
-      href: "mailto:contact.evesunmaple@outlook.com"
-      target: _blank
+      href: /contact
+      target: _self
       svg: "material-symbols:attach-email-outline-rounded"
 
 # 作者信息
 user:
   name: Jeffery
-  email: "chow1784@gmail.com"
+  email: "chowchow20240101@gmail.com"
   site: "https://www.niceblog.xyz"
   avatar: /profile.png
 

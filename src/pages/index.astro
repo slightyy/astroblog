@@ -1,82 +1,194 @@
 ---
 import { Icon } from "astro-icon/components";
+import BlogActivityCard from "@/components/BlogActivityCard.astro";
 import MainCard from "@/components/MainCard.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-
-const today = new Intl.DateTimeFormat("zh-CN", { dateStyle: "full" }).format(new Date());
 ---
 
 <BaseLayout title="首页">
   <MainCard
-    title="欢迎来到我的小站"
-    description="这里记录技术学习、生活碎片和灵感笔记。"
-    image="/image/image3.png"
+    title="你好，欢迎来到我的博客"
+    description="一个记录编程实践、折腾过程与生活观察的数字花园。"
+    image="/image/generated/home-banner-nano.jpg"
     infoIcon="lucide:info"
     helpText="站点说明"
   >
     <div class="home-shell space-y-8">
       <section class="home-hero" data-home-section>
-        <p class="home-date">{today}</p>
-        <h1 class="home-title">把热爱写下来，日子就会发光。</h1>
-        <p class="home-desc">
-          这是我的个人博客，主要分享编程学习、折腾记录和生活观察。页面会持续慢慢装修，欢迎常来逛逛。
-        </p>
+        <p class="home-date" id="home-daily-date">加载日期中...</p>
+        <h1 class="home-title" id="home-daily-quote">未经审视的人生不值得过。</h1>
+        <p class="home-desc" id="home-daily-author">—— 苏格拉底</p>
         <div class="flex flex-wrap gap-3 justify-center">
           <a href="/blog" class="btn btn-primary gap-2 home-btn-main">
             <Icon name="lucide:notebook-pen" class="w-5 h-5" />
-            <span>去看文章</span>
+            <span>浏览文章</span>
           </a>
           <a href="/about" class="btn btn-outline gap-2 home-btn-sub">
             <Icon name="lucide:user-round" class="w-5 h-5" />
-            <span>了解我</span>
+            <span>认识我</span>
           </a>
+        </div>
+        <div class="home-hero-note">
+          <div class="home-hero-note-head">
+            <Icon name="lucide:megaphone" class="w-4 h-4" />
+            <h2>更新说明</h2>
+          </div>
+          <p>
+            qwen3.5 小模型在企业中的实际应用（1/3）：0.8b 和 2b 模型在运营 BI 面板数据中的意向识别训练。预计更新日期 2026 年 3 月 7 日。
+          </p>
         </div>
       </section>
 
       <section data-home-section>
         <h2 class="home-heading">
           <Icon name="lucide:sparkles" class="w-5 h-5 text-primary" />
-          <span>站点看点</span>
+          <span>专题入口</span>
         </h2>
         <div class="home-point-grid">
-          <article class="home-point-card">
+          <a href="/blog/tag/Bi面板" class="home-point-card home-point-link">
             <div class="home-point-icon">
-              <Icon name="lucide:scroll-text" class="w-5 h-5" />
+              <Icon name="lucide:layout-dashboard" class="w-5 h-5" />
             </div>
-            <h3>持续更新</h3>
-            <p>保持规律记录，不求一口气写很多，只求稳定输出。</p>
-          </article>
-          <article class="home-point-card">
+            <h3>Bi面板</h3>
+            <p>查看与 BI 面板搭建、指标设计和运营看板相关的文章。</p>
+          </a>
+          <a href="/blog/tag/数据分析" class="home-point-card home-point-link">
             <div class="home-point-icon">
-              <Icon name="lucide:palette" class="w-5 h-5" />
+              <Icon name="lucide:chart-column" class="w-5 h-5" />
             </div>
-            <h3>清爽阅读</h3>
-            <p>减少复杂元素，优先保证阅读舒适和移动端体验。</p>
-          </article>
-          <article class="home-point-card">
+            <h3>数据分析</h3>
+            <p>聚合数据清洗、分析方法和业务洞察相关的实战内容。</p>
+          </a>
+          <a href="/blog/tag/Ai" class="home-point-card home-point-link">
             <div class="home-point-icon">
-              <Icon name="lucide:book-heart" class="w-5 h-5" />
+              <Icon name="lucide:bot" class="w-5 h-5" />
             </div>
-            <h3>真实表达</h3>
-            <p>记录真实思考和踩坑过程，内容以实用、真诚为主。</p>
-          </article>
+            <h3>Ai</h3>
+            <p>浏览小模型应用、训练实践和 AI 方案落地记录。</p>
+          </a>
         </div>
       </section>
 
-      <section class="home-note" data-home-section>
-        <div class="flex items-center gap-2 mb-2 text-primary">
-          <Icon name="lucide:megaphone" class="w-5 h-5" />
-          <h2 class="font-bold text-lg">小公告</h2>
-        </div>
-        <p>首页已完成第一版简单装修，后续会继续补充分类页、关于页和文章卡片的细节风格。</p>
+      <section data-home-section>
+        <BlogActivityCard />
       </section>
+
     </div>
   </MainCard>
 </BaseLayout>
 
+<script is:inline>
+  const DAILY_QUOTES = [
+    { quote: "未经审视的人生不值得过。", author: "苏格拉底" },
+    { quote: "我唯一知道的，就是我一无所知。", author: "苏格拉底" },
+    { quote: "我思故我在。", author: "笛卡尔" },
+    { quote: "人是目的，而不是手段。", author: "康德" },
+    { quote: "敢于运用你自己的理性。", author: "康德" },
+    { quote: "幸福是灵魂依德性的活动。", author: "亚里士多德" },
+    { quote: "认识你自己。", author: "德尔斐箴言（苏格拉底常引）" },
+    { quote: "存在先于本质。", author: "萨特" },
+    { quote: "人被判定为自由。", author: "萨特" },
+    { quote: "我们必须设想西西弗斯是幸福的。", author: "加缪" },
+    { quote: "凡不能毁灭我的，必使我更强大。", author: "尼采" },
+    { quote: "成为你自己。", author: "尼采" },
+    { quote: "幸福就在路上。", author: "齐克果" },
+    { quote: "人是万物的尺度。", author: "普罗泰戈拉" },
+  ];
+
+  const SOLAR_FESTIVALS = {
+    "1-1": "元旦",
+    "2-14": "情人节",
+    "3-8": "妇女节",
+    "4-1": "愚人节",
+    "5-1": "劳动节",
+    "6-1": "儿童节",
+    "9-10": "教师节",
+    "10-1": "国庆节",
+    "12-25": "圣诞节",
+  };
+
+  const LUNAR_FESTIVALS = {
+    "1-1": "春节",
+    "1-15": "元宵节",
+    "5-5": "端午节",
+    "7-7": "七夕",
+    "8-15": "中秋节",
+    "9-9": "重阳节",
+    "12-8": "腊八节",
+    "12-23": "小年",
+  };
+
+  const gregorianFormatter = new Intl.DateTimeFormat("zh-CN", { dateStyle: "full" });
+  const lunarNumericFormatter = new Intl.DateTimeFormat("zh-CN-u-ca-chinese", {
+    month: "numeric",
+    day: "numeric",
+  });
+  const lunarFormatter = new Intl.DateTimeFormat("zh-CN-u-ca-chinese", {
+    month: "long",
+    day: "numeric",
+  });
+
+  const getLunarMonthDay = (date) => {
+    const [month, day] = lunarNumericFormatter
+      .format(date)
+      .split("-")
+      .map((value) => Number.parseInt(value, 10));
+    if (Number.isNaN(month) || Number.isNaN(day)) return null;
+    return { month, day };
+  };
+
+  const getFestivalText = (date) => {
+    const festivals = [];
+
+    const solarKey = `${date.getMonth() + 1}-${date.getDate()}`;
+    if (SOLAR_FESTIVALS[solarKey]) festivals.push(SOLAR_FESTIVALS[solarKey]);
+
+    const lunar = getLunarMonthDay(date);
+    if (lunar) {
+      const lunarKey = `${lunar.month}-${lunar.day}`;
+      if (LUNAR_FESTIVALS[lunarKey]) festivals.push(LUNAR_FESTIVALS[lunarKey]);
+
+      const tomorrow = new Date(date);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowLunar = getLunarMonthDay(tomorrow);
+      if (lunar.month === 12 && tomorrowLunar?.month === 1 && tomorrowLunar.day === 1) {
+        festivals.push("除夕");
+      }
+    }
+
+    return [...new Set(festivals)].join("、");
+  };
+
+  const getDailyQuote = (date) => {
+    const midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const daySeed = Math.floor(midnight.getTime() / 86400000);
+    const index = ((daySeed % DAILY_QUOTES.length) + DAILY_QUOTES.length) % DAILY_QUOTES.length;
+    return DAILY_QUOTES[index];
+  };
+
+  const applyDailyContent = () => {
+    const dateEl = document.getElementById("home-daily-date");
+    const quoteEl = document.getElementById("home-daily-quote");
+    const authorEl = document.getElementById("home-daily-author");
+    if (!dateEl || !quoteEl || !authorEl) return;
+
+    const now = new Date();
+    const quote = getDailyQuote(now);
+    const gregorian = gregorianFormatter.format(now);
+    const lunar = lunarFormatter.format(now).replace("日", "");
+    const festival = getFestivalText(now) || "无";
+
+    dateEl.textContent = `${gregorian} · 农历${lunar} · 节日：${festival}`;
+    quoteEl.textContent = quote.quote;
+    authorEl.textContent = `—— ${quote.author}`;
+  };
+
+  document.addEventListener("astro:page-load", applyDailyContent);
+</script>
+
 <style>
   .home-shell {
-    font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font-ui);
   }
 
   .home-hero {
@@ -85,8 +197,20 @@ const today = new Intl.DateTimeFormat("zh-CN", { dateStyle: "full" }).format(new
     border-radius: 1.25rem;
     padding: 2rem 1.25rem;
     text-align: center;
-    border: 1px solid oklch(var(--bc) / 0.12);
-    background: linear-gradient(145deg, oklch(var(--b1)), oklch(var(--b2)));
+    border: 1px solid oklch(var(--bc) / 0.14);
+    background:
+      linear-gradient(145deg, oklch(var(--b1) / 0.84), oklch(var(--b2) / 0.72)),
+      radial-gradient(circle at 20% 10%, oklch(var(--p) / 0.14), transparent 44%);
+    box-shadow:
+      0 18px 42px oklch(0 0 0 / 0.12),
+      inset 0 1px 0 oklch(1 0 0 / 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .home-hero > * {
+    position: relative;
+    z-index: 1;
   }
 
   .home-hero::before {
@@ -136,12 +260,45 @@ const today = new Intl.DateTimeFormat("zh-CN", { dateStyle: "full" }).format(new
 
   .home-btn-main,
   .home-btn-sub {
-    transition: transform 0.24s ease;
+    transition:
+      transform 0.24s ease,
+      box-shadow 0.24s ease;
   }
 
   .home-btn-main:hover,
   .home-btn-sub:hover {
     transform: translateY(-2px);
+    box-shadow: 0 12px 22px oklch(var(--bc) / 0.16);
+  }
+
+  .home-hero-note {
+    margin-top: 1rem;
+    border-radius: 0.9rem;
+    border: 1px solid oklch(var(--bc) / 0.2);
+    padding: 0.85rem 0.95rem;
+    text-align: left;
+    background: linear-gradient(155deg, oklch(var(--b1) / 0.55), oklch(var(--b2) / 0.42));
+    line-height: 1.75;
+  }
+
+  .home-hero-note-head {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.32rem;
+    color: oklch(var(--bc) / 0.86);
+  }
+
+  .home-hero-note-head h2 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .home-hero-note p {
+    margin: 0;
+    color: oklch(var(--bc) / 0.8);
+    font-size: 0.95rem;
   }
 
   .home-heading {
@@ -165,6 +322,22 @@ const today = new Intl.DateTimeFormat("zh-CN", { dateStyle: "full" }).format(new
     padding: 1rem;
     background: color-mix(in oklch, oklch(var(--b1)), oklch(var(--p) / 0.04));
     box-shadow: 0 8px 30px oklch(var(--bc) / 0.03);
+    transition:
+      transform 0.24s ease,
+      border-color 0.24s ease,
+      box-shadow 0.24s ease;
+  }
+
+  .home-point-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .home-point-card:hover {
+    transform: translateY(-3px);
+    border-color: oklch(var(--p) / 0.26);
+    box-shadow: 0 16px 30px oklch(var(--bc) / 0.11);
   }
 
   .home-point-card h3 {
@@ -190,17 +363,10 @@ const today = new Intl.DateTimeFormat("zh-CN", { dateStyle: "full" }).format(new
     background: oklch(var(--p) / 0.12);
   }
 
-  .home-note {
-    border-radius: 1rem;
-    border: 1px dashed oklch(var(--p) / 0.45);
-    padding: 1rem 1rem 1.1rem;
-    background: oklch(var(--p) / 0.05);
-    line-height: 1.8;
-  }
-
   [data-home-section] {
     opacity: 0;
     transform: translateY(16px);
+    filter: blur(4px);
     animation: homeFadeIn 0.55s ease forwards;
   }
 
@@ -220,6 +386,7 @@ const today = new Intl.DateTimeFormat("zh-CN", { dateStyle: "full" }).format(new
     to {
       opacity: 1;
       transform: translateY(0);
+      filter: blur(0);
     }
   }
 
@@ -230,6 +397,15 @@ const today = new Intl.DateTimeFormat("zh-CN", { dateStyle: "full" }).format(new
 
     .home-hero {
       padding: 2.2rem 2rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-home-section] {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      animation: none;
     }
   }
 </style>

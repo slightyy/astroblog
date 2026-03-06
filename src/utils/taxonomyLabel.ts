@@ -20,6 +20,10 @@ const TAG_LABELS: Record<string, string> = {
   Waline: "Waline",
   Astro: "Astro",
   LaTeX: "LaTeX",
+  "Bi面板": "Bi面板",
+  "数据分析": "数据分析",
+  Ai: "Ai",
+  AI: "Ai",
 };
 
 export function getCategoryLabel(category: string): string {

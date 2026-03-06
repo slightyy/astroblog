@@ -1,0 +1,132 @@
+
+> frosti@3.3.3 dev
+> astro dev
+
+[2m14:34:20[22m [34m[types][39m Generated [2m1ms[22m
+[2m14:34:20[22m [34m[content][39m Syncing content
+[2m14:34:20[22m [34m[content][39m Synced content
+
+[42m[1m astro [22m[49m [32mv5.17.2[39m [2mready in[22m 1611 [2mms[22m
+
+[2m┃[22m Local    [36mhttp://localhost:4321/[39m
+[2m┃[22m Network  [2muse --host to expose[22m
+
+[2m14:34:20[22m [32mwatching for file changes...[39m
+[2m14:34:57[22m [34m[200][39m [34mHEAD[39m / [2m763ms[22m
+[2m14:39:17[22m [34m[200][39m / [2m117ms[22m
+[2m14:39:26[22m [34m[200][39m /about [2m11ms[22m
+[2m14:39:26[22m [34m[200][39m /about [2m7ms[22m
+[2m14:39:27[22m [34m[200][39m / [2m102ms[22m
+[2m14:39:27[22m [34m[200][39m / [2m98ms[22m
+[2m14:39:29[22m [34m[200][39m /about [2m5ms[22m
+[2m14:39:29[22m [34m[200][39m / [2m96ms[22m
+[2m14:39:33[22m [34m[200][39m /about [2m7ms[22m
+[2m14:39:38[22m [34m[200][39m /project [2m6ms[22m
+[2m14:39:39[22m [34m[200][39m /blog [2m17ms[22m
+[2m14:39:39[22m [34m[200][39m /blog [2m9ms[22m
+[2m14:39:42[22m [34m[200][39m /project [2m4ms[22m
+[2m14:39:44[22m [34m[200][39m /project/mcp-skills-bi-automation [2m5ms[22m
+[2m14:39:45[22m [34m[200][39m /friend [2m8ms[22m
+[2m14:39:46[22m [34m[200][39m /blog [2m8ms[22m
+[2m14:39:47[22m [34m[200][39m /blog/qwen3-5-small-model-bi-1 [2m11ms[22m
+[2m14:39:48[22m [34m[200][39m /blog/qwen3-5-bi-realtime-interpretation-2 [2m37ms[22m
+[2m14:39:50[22m [34m[200][39m /blog/qwen3-5-bi-realtime-interpretation-2 [2m28ms[22m
+[2m14:39:55[22m [34m[200][39m /blog [2m8ms[22m
+[2m14:40:35[22m [34m[200][39m /blog/openclaw-cron-threaded-mode [2m12ms[22m
+[2m14:41:24[22m [34m[watch][39m src/content/blog/qwen3-5-bi-realtime-interpretation-2.mdx
+[2m14:41:24[22m [34m[glob-loader][39m Reloaded data from [32mqwen3-5-bi-realtime-interpretation-2.mdx[39m
+[2m14:41:25[22m [34m[200][39m /blog [2m283ms[22m
+[2m14:41:25[22m [34m[200][39m /blog [2m272ms[22m
+[2m14:41:35[22m [34m[200][39m /blog [2m14ms[22m
+[2m14:41:44[22m [34m[200][39m /blog/ [2m12ms[22m
+[2m14:41:53[22m [34m[200][39m /blog/ [2m9ms[22m
+[2m14:42:01[22m [34m[200][39m /blog/ [2m8ms[22m
+[2m14:42:10[22m [34m[200][39m /blog/ [2m9ms[22m
+[2m14:42:30[22m [34m[200][39m /blog/ [2m10ms[22m
+[2m14:42:43[22m [34m[200][39m /blog/ [2m8ms[22m
+[2m14:43:51[22m [34m[200][39m /blog/categories [2m8ms[22m
+[2m14:43:51[22m [34m[200][39m /blog/archives [2m6ms[22m
+[2m14:43:51[22m [34m[200][39m /blog [2m8ms[22m
+[2m14:43:53[22m [34m[200][39m /friend [2m6ms[22m
+[2m14:43:54[22m [34m[200][39m /project [2m5ms[22m
+[2m14:43:54[22m [34m[200][39m /project [2m5ms[22m
+[2m14:43:55[22m [34m[200][39m /friend [2m6ms[22m
+[2m14:45:21[22m [34m[watch][39m src/pages/about.astro
+[2m14:45:21[22m [34m[watch][39m src/pages/about.astro
+[2m14:45:22[22m [34m[200][39m /friend [2m179ms[22m
+[2m14:45:37[22m [34m[200][39m /donate [2m4ms[22m
+[2m14:46:16[22m [34m[200][39m /blog/categories [2m5ms[22m
+[2m14:46:50[22m [34m[200][39m /project [2m5ms[22m
+[2m14:46:51[22m [34m[200][39m /project [2m8ms[22m
+[2m14:46:51[22m [34m[200][39m /friend [2m6ms[22m
+[2m14:46:52[22m [34m[200][39m /friend [2m7ms[22m
+[2m14:47:29[22m [34m[200][39m /blog [2m9ms[22m
+[2m14:47:29[22m [34m[200][39m / [2m99ms[22m
+[2m14:47:30[22m [34m[200][39m / [2m98ms[22m
+[2m14:47:31[22m [34m[200][39m /about [2m8ms[22m
+[2m14:47:35[22m [34m[200][39m /about [2m7ms[22m
+[2m14:47:36[22m [34m[200][39m /blog [2m8ms[22m
+[2m14:47:36[22m [34m[200][39m /blog/qwen3-5-bi-realtime-interpretation-2 [2m44ms[22m
+[2m14:47:37[22m [34m[200][39m /blog/tag/小模型 [2m6ms[22m
+[2m14:48:09[22m Configuration file updated. Restarting...
+[2m14:48:09[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m14:48:10[22m [34m[content][39m Syncing content
+[2m14:48:10[22m [34m[content][39m Synced content
+[2m14:48:10[22m [34m[types][39m Generated [2m1.14s[22m
+[2m14:48:10[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m14:48:17[22m [34m[200][39m /blog/qwen3-5-small-model-bi-1 [2m241ms[22m
+[2m14:48:17[22m [34m[200][39m /blog [2m242ms[22m
+[2m14:48:20[22m [34m[200][39m /blog/tag/小模型 [2m9ms[22m
+[2m14:48:22[22m [34m[200][39m /blog/qwen3-5-small-model-bi-1 [2m10ms[22m
+[2m14:48:23[22m [34m[200][39m /blog/openclaw-skills-recommendation [2m9ms[22m
+[2m14:48:24[22m [34m[200][39m /blog/tag/Telegram [2m6ms[22m
+[2m14:48:25[22m [34m[200][39m /blog/openclaw-telegram-polling-fix [2m9ms[22m
+[2m14:48:26[22m [34m[200][39m /blog/markdown-demo [2m9ms[22m
+[2m14:48:27[22m [34m[200][39m /blog/markdown-demo [2m9ms[22m
+[2m14:48:29[22m [34m[200][39m /og/markdown-demo.png [2m1021ms[22m
+[2m14:48:40[22m [34m[200][39m /friend [2m13ms[22m
+[2m14:48:41[22m [34m[200][39m /blog [2m11ms[22m
+[2m14:48:43[22m [34m[200][39m /blog/tag/Openclaw [2m8ms[22m
+[2m14:48:44[22m [34m[200][39m /contact [2m6ms[22m
+[2m14:48:45[22m [34m[200][39m /blog/prompt-vs-commander [2m7ms[22m
+[2m14:48:49[22m [34m[200][39m /blog/tag/Threaded Mode [2m7ms[22m
+[2m14:48:54[22m [34m[200][39m / [2m105ms[22m
+[2m14:49:02[22m [34m[200][39m /blog/openclaw-cron-threaded-mode [2m11ms[22m
+[2m14:49:44[22m [34m[200][39m /blog [2m10ms[22m
+[2m14:49:45[22m [34m[200][39m /contact [2m6ms[22m
+[2m14:49:45[22m [34m[200][39m /contact [2m6ms[22m
+[2m14:49:46[22m [34m[200][39m /project [2m7ms[22m
+[2m14:52:26[22m [34m[200][39m /contact [2m8ms[22m
+[2m14:53:01[22m [34m[200][39m / [2m109ms[22m
+[2m14:53:03[22m [34m[200][39m /contact [2m7ms[22m
+[2m14:53:04[22m [34m[200][39m /contact [2m5ms[22m
+[2m14:53:04[22m [34m[200][39m /project [2m6ms[22m
+[2m14:55:32[22m [34m[200][39m /contact [2m8ms[22m
+[2m15:00:59[22m [34m[watch][39m /src/pages/contact.astro?astro&type=style&index=0&lang.css
+[2m15:01:00[22m [34m[200][39m /contact [2m8ms[22m
+[2m15:01:18[22m [34m[200][39m /contact [2m6ms[22m
+[2m15:01:41[22m [34m[200][39m /contact [2m6ms[22m
+[2m15:02:27[22m [34m[200][39m /contact [2m8ms[22m
+[2m15:03:19[22m [34m[200][39m /contact [2m6ms[22m
+[2m15:04:31[22m [34m[200][39m /contact [2m8ms[22m
+[2m15:05:13[22m [34m[watch][39m /src/pages/contact.astro?astro&type=style&index=0&lang.css
+[2m15:05:14[22m [33m[404][39m /contact [2m5ms[22m
+[2m15:05:40[22m [34m[200][39m /blog/archives [2m8ms[22m
+[2m15:05:44[22m [34m[200][39m /friend [2m10ms[22m
+[2m15:05:45[22m [33m[404][39m /contact [2m6ms[22m
+[2m15:05:51[22m [34m[200][39m /about [2m8ms[22m
+[2m15:05:51[22m [34m[200][39m / [2m102ms[22m
+[2m15:05:51[22m [34m[200][39m / [2m102ms[22m
+[2m15:05:53[22m [34m[200][39m /project [2m6ms[22m
+[2m15:05:53[22m [34m[200][39m /blog/tag/Bi面板 [2m9ms[22m
+[2m15:06:13[22m [34m[watch][39m /src/pages/contact.astro?astro&type=style&index=0&lang.css
+[2m15:06:14[22m [34m[200][39m / [2m105ms[22m
+[2m15:06:16[22m [34m[200][39m /blog/tag/Bi面板 [2m7ms[22m
+[2m15:06:16[22m [34m[200][39m /contact [2m8ms[22m
+[2m15:06:17[22m [34m[200][39m /contact [2m6ms[22m
+[2m15:06:23[22m [34m[200][39m / [2m101ms[22m
+[2m15:06:23[22m [34m[200][39m / [2m104ms[22m
+[2m15:06:28[22m [34m[200][39m /contact [2m5ms[22m
+[2m15:06:45[22m [34m[200][39m /contact [2m5ms[22m
+[2m15:06:59[22m [34m[200][39m /contact [2m5ms[22m
+[2m15:07:15[22m [34m[200][39m /contact [2m5ms[22m

@@ -36,7 +36,9 @@ const {
 
     <script define:vars={{ SITE_THEME }} is:inline>
       (function () {
-        const storedTheme = localStorage.getItem("theme");
+        const allowedThemes = new Set([SITE_THEME.light, SITE_THEME.dark]);
+        const rawStoredTheme = localStorage.getItem("theme");
+        const storedTheme = rawStoredTheme && allowedThemes.has(rawStoredTheme) ? rawStoredTheme : null;
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         let theme;
         if (storedTheme) {
@@ -61,20 +63,21 @@ const {
     </script>
   </head>
 
-  <body class="flex flex-col min-h-screen" {...isIndexed ? { "data-pagefind-body": true } : {}}>
+  <body class="relative flex flex-col min-h-screen" {...isIndexed ? { "data-pagefind-body": true } : {}}>
     <Navbar />
+    <div class="site-bg-orbs" aria-hidden="true"></div>
 
-    <div class="max-w-6xl mx-auto w-full flex-grow">
-      <div class="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 gap-4 p-4 h-full">
+    <div class="site-main-shell max-w-6xl mx-auto w-full flex-grow px-2 pb-3 md:px-4 md:pb-4">
+      <div class="site-layout-grid grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 gap-4 pt-16 md:pt-4 h-full">
         <main
-          class="col-span-1 md:col-span-4 lg:col-span-3 bg-transparent order-1 md:order-2 mt-16 md:mt-0 flex flex-col gap-4"
+          class="col-span-1 md:col-span-4 lg:col-span-3 bg-transparent order-1 md:order-2 flex flex-col gap-4"
         >
-          <div class="flex-grow flex flex-col gap-4">
+          <div class="site-content-stack flex-grow flex flex-col gap-4">
             <slot />
           </div>
           <Footer />
         </main>
-        <aside class="col-span-1 bg-transparent order-2 md:order-1 md:top-4">
+        <aside class="col-span-1 bg-transparent order-2 md:order-1 md:top-4 sidebar-stack">
           <Sidebar headings={headings} showTOC={showTOC} />
           <slot name="sidebar" />
         </aside>
@@ -85,7 +88,9 @@ const {
 
     <script define:vars={{ SITE_THEME }} is:inline>
       document.addEventListener("astro:after-swap", () => {
-        const storedTheme = localStorage.getItem("theme");
+        const allowedThemes = new Set([SITE_THEME.light, SITE_THEME.dark]);
+        const rawStoredTheme = localStorage.getItem("theme");
+        const storedTheme = rawStoredTheme && allowedThemes.has(rawStoredTheme) ? rawStoredTheme : null;
         if (storedTheme) {
           document.documentElement.setAttribute("data-theme", storedTheme);
           const themeType = storedTheme === SITE_THEME.dark ? "dark" : "light";

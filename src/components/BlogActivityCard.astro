@@ -1,0 +1,294 @@
+---
+import { execSync } from "node:child_process";
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  className?: string;
+}
+
+const { className = "" } = Astro.props as Props;
+
+const formatDateKey = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const isValidGitRef = (ref: string): boolean => {
+  try {
+    execSync(`git rev-parse --verify --quiet ${ref}`, { stdio: "ignore" });
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const resolveGitRef = (): string => {
+  try {
+    const originHead = execSync(
+      "git symbolic-ref --quiet --short refs/remotes/origin/HEAD",
+      { encoding: "utf8" },
+    ).trim();
+
+    if (originHead && isValidGitRef(originHead)) return originHead;
+  } catch {
+    // Ignore and use fallback refs.
+  }
+
+  const fallbackRefs = ["origin/main", "origin/master", "HEAD"];
+  for (const ref of fallbackRefs) {
+    if (isValidGitRef(ref)) return ref;
+  }
+
+  return "HEAD";
+};
+
+const getBlogUpdateMap = (ref: string): Map<string, number> => {
+  const map = new Map<string, number>();
+  try {
+    const output = execSync(
+      `git log ${ref} --since="365 days ago" --date=short --pretty=format:%ad`,
+      { encoding: "utf8" },
+    ).trim();
+
+    if (!output) return map;
+
+    for (const line of output.split(/\r?\n/)) {
+      const dateKey = line.trim();
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) continue;
+      map.set(dateKey, (map.get(dateKey) || 0) + 1);
+    }
+  } catch {
+    return map;
+  }
+  return map;
+};
+
+const gitRef = resolveGitRef();
+const activityMap = getBlogUpdateMap(gitRef);
+const activitySource = gitRef.startsWith("origin/")
+  ? `远端分支 ${gitRef}`
+  : "本地分支 HEAD（未检测到远端默认分支）";
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const startDate = new Date(today);
+startDate.setDate(startDate.getDate() - 364);
+
+const rawDays = Array.from({ length: 365 }, (_, index) => {
+  const date = new Date(startDate);
+  date.setDate(startDate.getDate() + index);
+  const key = formatDateKey(date);
+  const count = activityMap.get(key) || 0;
+  return {
+    count,
+    label: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`,
+  };
+});
+
+const maxActivity = rawDays.reduce((max, day) => Math.max(max, day.count), 0);
+
+const getActivityLevel = (count: number): number => {
+  if (count === 0 || maxActivity === 0) return 0;
+  const ratio = count / maxActivity;
+  if (ratio <= 0.25) return 1;
+  if (ratio <= 0.5) return 2;
+  if (ratio <= 0.75) return 3;
+  return 4;
+};
+
+const days = rawDays.map((day) => ({
+  ...day,
+  level: getActivityLevel(day.count),
+}));
+
+const toMondayIndex = (day: number): number => (day + 6) % 7;
+const getWeekStartMonday = (date: Date): Date => {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() - toMondayIndex(d.getDay()));
+  return d;
+};
+
+const getWeekEndSunday = (date: Date): Date => {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() + (6 - toMondayIndex(d.getDay())));
+  return d;
+};
+
+const dayMap = new Map(days.map((day) => [day.label, day] as const));
+const gridStart = getWeekStartMonday(startDate);
+const gridEnd = getWeekEndSunday(today);
+
+const weekColumns: (((typeof days)[number]) | null)[][] = [];
+for (let cursor = new Date(gridStart); cursor <= gridEnd; cursor.setDate(cursor.getDate() + 7)) {
+  const weekStart = new Date(cursor);
+  const week: (((typeof days)[number]) | null)[] = [];
+
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(weekStart);
+    date.setDate(weekStart.getDate() + i);
+    const key = formatDateKey(date);
+
+    if (date < startDate || date > today) {
+      week.push(null);
+      continue;
+    }
+
+    week.push(dayMap.get(key) ?? { label: key, count: 0, level: 0 });
+  }
+
+  weekColumns.push(week);
+}
+
+const weekdayLabels = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
+
+const totalBlogUpdates = days.reduce((sum, day) => sum + day.count, 0);
+const rangeStartLabel = formatDateKey(startDate);
+const rangeEndLabel = formatDateKey(today);
+const latestUpdateLabel = [...days]
+  .reverse()
+  .find((day) => day.count > 0)?.label;
+---
+
+<section class:list={["py-4", className]}>
+  <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+    <Icon name="lucide:activity" class="w-6 h-6 text-primary" />
+    <span>博客更新活跃度</span>
+  </h2>
+
+  <div class="card bg-base-200 p-6">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <p class="text-base-content/80">统计来源：{activitySource} 最近 365 天对 astroblog 仓库的提交</p>
+      <div class="badge badge-primary badge-outline">{totalBlogUpdates} 次提交</div>
+    </div>
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-base-content/70 mb-4">
+      <p>统计区间：{rangeStartLabel} - {rangeEndLabel}</p>
+      <p>最近更新：{latestUpdateLabel ?? "暂无记录"}</p>
+    </div>
+    <p class="text-xs text-base-content/70 mb-4">未提交或未推送到远端分支的本地改动不会计入。</p>
+
+    <div class="activity-map-layout">
+      <div class="activity-weekdays" aria-hidden="true">
+        {weekdayLabels.map((label) => <span>{label}</span>)}
+      </div>
+
+      <div class="activity-map-main">
+        <div class="overflow-x-auto">
+          <div class="blog-activity-map">
+            {
+              weekColumns.map((week) => (
+                <div class="activity-week">
+                  {week.map((day) =>
+                    day ? (
+                      <div
+                        class:list={[
+                          "activity-cell",
+                          `activity-level-${day.level}`,
+                        ]}
+                        title={`${day.label}: ${day.count} 次更新`}
+                      ></div>
+                    ) : (
+                      <div class="activity-cell activity-empty" aria-hidden="true"></div>
+                    ),
+                  )}
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between mt-2 text-[11px] text-base-content/60">
+          <span>{rangeStartLabel}</span>
+          <span>{rangeEndLabel}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end gap-2 mt-4 text-xs text-base-content/70">
+      <span>低</span>
+      <span class="activity-cell activity-level-0"></span>
+      <span class="activity-cell activity-level-1"></span>
+      <span class="activity-cell activity-level-2"></span>
+      <span class="activity-cell activity-level-3"></span>
+      <span class="activity-cell activity-level-4"></span>
+      <span>高</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .activity-map-layout {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+
+  .activity-map-main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .activity-weekdays {
+    display: grid;
+    grid-template-rows: repeat(7, 12px);
+    gap: 4px;
+    align-content: start;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  .activity-weekdays span {
+    height: 12px;
+    line-height: 12px;
+    font-size: 11px;
+    color: oklch(var(--bc) / 0.62);
+    white-space: nowrap;
+    text-align: right;
+  }
+
+  .blog-activity-map {
+    display: flex;
+    gap: 4px;
+    min-width: max-content;
+  }
+
+  .activity-week {
+    display: grid;
+    grid-template-rows: repeat(7, 12px);
+    gap: 4px;
+  }
+
+  .activity-cell {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  .activity-empty {
+    background: transparent;
+  }
+
+  .activity-level-0 {
+    background: color-mix(in oklab, var(--fallback-b3, oklch(var(--b3))) 85%, transparent);
+  }
+
+  .activity-level-1 {
+    background: #cfe8d6;
+  }
+
+  .activity-level-2 {
+    background: #95d2a6;
+  }
+
+  .activity-level-3 {
+    background: #56b97a;
+  }
+
+  .activity-level-4 {
+    background: #1f8a4c;
+  }
+</style>

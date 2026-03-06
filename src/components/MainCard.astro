@@ -29,7 +29,7 @@ const {
 const accessibleHelpText = `${helpText}: ${title}`;
 ---
 
-<Card class={`overflow-hidden ${extraClasses}`}>
+<Card class={`overflow-hidden group/main ${extraClasses}`}>
   {
     image ? (
       // With image - show image with overlay title
@@ -42,9 +42,10 @@ const accessibleHelpText = `${helpText}: ${title}`;
             height={630}
             format="webp"
             loading="eager"
-            class="w-full h-full object-cover"
+            class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover/main:scale-[1.03]"
           />
         </div>
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/48 via-black/20 to-transparent"></div>
 
         {/* Flex container for Title and Button */}
         <div class="absolute bottom-4 left-4 right-4 lg:bottom-6 lg:left-6 lg:right-6 flex items-end justify-between gap-4">
@@ -82,17 +83,28 @@ const accessibleHelpText = `${helpText}: ${title}`;
         </div>
       </div>
     ) : textOverlay ? (
-      // No image, but with textOverlay - show gradient background with overlay text
+      // No image, but with textOverlay - show a structured banner style
       <div class="relative">
-        <div class={`aspect-video w-full overflow-hidden bg-gradient-to-br from-base-300 to-base-100 ${headerClass}`}>
+        <div class={`relative aspect-video w-full overflow-hidden ${headerClass}`}>
+          <div class="absolute inset-0 bg-gradient-to-br from-base-300/90 via-base-200/80 to-base-100/90"></div>
+          <div
+            class="absolute inset-0 opacity-35"
+            style="background-image: linear-gradient(to right, oklch(var(--bc) / 0.04) 1px, transparent 1px), linear-gradient(to bottom, oklch(var(--bc) / 0.04) 1px, transparent 1px); background-size: 28px 28px;"
+          ></div>
+          <div class="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-primary/22 blur-3xl"></div>
+          <div class="pointer-events-none absolute -bottom-24 -right-16 h-72 w-72 rounded-full bg-secondary/20 blur-3xl"></div>
+
           {showTextBackground && textOverlay && (
-            <div class="absolute inset-0 w-full h-full error-animation-container">
-              <div class="text-9xl md:text-[12rem] font-bold text-primary opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                {textOverlay}
-              </div>
+            <div class="absolute left-5 top-5 rounded-xl border border-base-content/20 bg-base-100/30 px-4 py-2 backdrop-blur-md shadow-[0_10px_24px_-16px_rgba(0,0,0,0.6)]">
+              <span class="text-sm font-semibold tracking-[0.08em] text-base-content/90">{textOverlay}</span>
             </div>
           )}
+
+          <div class="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full border border-base-content/24 bg-base-100/28 text-base-content/80 backdrop-blur-md shadow-[0_10px_24px_-16px_rgba(0,0,0,0.6)]">
+            <Icon name={infoIcon} class="w-5 h-5" />
+          </div>
         </div>
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/24 via-transparent to-transparent"></div>
 
         {/* Flex container for Title and Button */}
         <div class="absolute bottom-4 left-4 right-4 lg:bottom-6 lg:left-6 lg:right-6 flex items-end justify-between gap-4">
