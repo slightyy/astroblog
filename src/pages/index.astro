@@ -9,7 +9,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
   <MainCard
     title="你好，欢迎来到我的博客"
     description="一个记录编程实践、折腾过程与生活观察的数字花园。"
-    image="/image/generated/home-banner-nano.jpg"
+    image="/image/generated/home-banner-nano.webp"
     infoIcon="lucide:info"
     helpText="站点说明"
   >
@@ -365,30 +365,10 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
   }
 
   [data-home-section] {
-    opacity: 0;
-    transform: translateY(16px);
-    filter: blur(4px);
-    animation: homeFadeIn 0.55s ease forwards;
-  }
-
-  [data-home-section]:nth-of-type(1) {
-    animation-delay: 0.04s;
-  }
-
-  [data-home-section]:nth-of-type(2) {
-    animation-delay: 0.14s;
-  }
-
-  [data-home-section]:nth-of-type(3) {
-    animation-delay: 0.24s;
-  }
-
-  @keyframes homeFadeIn {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-      filter: blur(0);
-    }
+    opacity: 1;
+    transform: none;
+    filter: none;
+    animation: none;
   }
 
   @media (min-width: 768px) {
@@ -398,6 +378,13 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 
     .home-hero {
       padding: 2.2rem 2rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .home-hero {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
   }
 

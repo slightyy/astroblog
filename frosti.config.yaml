@@ -49,7 +49,7 @@ user:
   name: Jeffery
   email: "chowchow20240101@gmail.com"
   site: "https://www.niceblog.xyz"
-  avatar: /profile.png
+  avatar: /profile.webp
 
   sidebar:
     social:

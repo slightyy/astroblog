@@ -87,3 +87,78 @@ import { Icon } from "astro-icon/components";
     });
   }
 </script>
+
+<style is:global>
+  #pagefind-search {
+    --pagefind-ui-scale: 1;
+    --pagefind-ui-primary: oklch(var(--a));
+    --pagefind-ui-text: oklch(var(--bc));
+    --pagefind-ui-background: oklch(var(--b1));
+    --pagefind-ui-border: oklch(var(--bc) / 0.2);
+    --pagefind-ui-tag: oklch(var(--b2));
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 0.5rem;
+    --pagefind-ui-image-border-radius: 0.5rem;
+    --pagefind-ui-image-box-ratio: 3/2;
+    --pagefind-ui-font: var(--font-sans, system-ui, sans-serif);
+  }
+
+  #pagefind-search .pagefind-ui__search-input {
+    border: 1px solid oklch(var(--bc) / 0.2);
+  }
+
+  #pagefind-search .pagefind-ui__search-clear {
+    display: none;
+  }
+
+  #pagefind-search .pagefind-ui__result {
+    margin-bottom: 1rem;
+    border: 1px solid var(--pagefind-ui-border);
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+
+  #pagefind-search .pagefind-ui__result-title {
+    margin-bottom: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+
+  #pagefind-search .pagefind-ui__result-link {
+    color: oklch(var(--p));
+  }
+
+  #pagefind-search .pagefind-ui__result-link:hover {
+    text-decoration: underline;
+  }
+
+  #pagefind-search .pagefind-ui__result-excerpt {
+    font-size: 0.875rem;
+    color: oklch(var(--bc) / 0.75);
+  }
+
+  #pagefind-search .pagefind-ui__result-excerpt mark {
+    border-radius: 0.25rem;
+    padding: 0 0.25rem;
+    background: oklch(var(--a));
+    color: oklch(var(--ac));
+  }
+
+  #pagefind-search .pagefind-ui__button {
+    border-radius: 0.5rem;
+  }
+
+  #pagefind-search .pagefind-ui__message {
+    margin: 1rem 0;
+    font-size: 0.875rem;
+    color: oklch(var(--bc) / 0.75);
+  }
+
+  #pagefind-search .pagefind-ui__message:empty::before {
+    content: "未找到结果，请尝试其他关键词。";
+    display: block;
+    padding: 2rem 0;
+    text-align: center;
+    color: oklch(var(--bc) / 0.5);
+  }
+</style>

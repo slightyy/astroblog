@@ -40,8 +40,10 @@ const accessibleHelpText = `${helpText}: ${title}`;
             alt={title}
             width={1200}
             height={630}
+            sizes="(max-width: 768px) 100vw, 75vw"
             format="webp"
             loading="eager"
+            fetchpriority="high"
             class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover/main:scale-[1.03]"
           />
         </div>

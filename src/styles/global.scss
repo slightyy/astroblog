@@ -493,21 +493,8 @@ kbd {
 }
 
 .site-content-stack > * {
-  opacity: 0;
-  transform: translateY(16px);
-  animation: siteSectionIn 0.5s ease-out forwards;
-}
-
-.site-content-stack > *:nth-child(2) {
-  animation-delay: 0.08s;
-}
-
-.site-content-stack > *:nth-child(3) {
-  animation-delay: 0.16s;
-}
-
-.site-content-stack > *:nth-child(4) {
-  animation-delay: 0.24s;
+  opacity: 1;
+  transform: none;
 }
 
 .frosti-mobile-nav {
@@ -582,13 +569,6 @@ kbd {
   border-radius: 0.9rem;
   background: linear-gradient(145deg, oklch(var(--b1) / 0.5), oklch(var(--b2) / 0.28));
   border: 1px solid oklch(var(--bc) / 0.12);
-}
-
-@keyframes siteSectionIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .menu :where(a, summary) {
@@ -1176,6 +1156,27 @@ code {
   .archive-icon {
     @apply w-3.5 h-3.5;
   }
+
+  .glass-card,
+  .glass-panel,
+  .glass-float,
+  .glass-float-strong,
+  .glass-subcard,
+  .liquid-card,
+  .liquid-panel,
+  .liquid-interactive,
+  .liquid-input,
+  .liquid-action-btn,
+  .menu :where(a, summary) {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .site-bg-orbs::before,
+  .site-bg-orbs::after {
+    filter: blur(24px);
+    opacity: 0.28;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1221,63 +1222,5 @@ code {
 
   .month-title {
     @apply text-lg;
-  }
-}
-
-/* Pagefind UI customization with oklch colors */
-#pagefind-search {
-  --pagefind-ui-scale: 1;
-  --pagefind-ui-primary: oklch(var(--a));
-  --pagefind-ui-text: oklch(var(--bc));
-  --pagefind-ui-background: oklch(var(--b1));
-  --pagefind-ui-border: oklch(var(--bc) / 0.2);
-  --pagefind-ui-tag: oklch(var(--b2));
-  --pagefind-ui-border-width: 1px;
-  --pagefind-ui-border-radius: 0.5rem;
-  --pagefind-ui-image-border-radius: 0.5rem;
-  --pagefind-ui-image-box-ratio: 3/2;
-  --pagefind-ui-font: var(--font-sans, system-ui, sans-serif);
-
-  .pagefind-ui__search-input {
-    @apply input input-bordered w-full;
-    border: 1px solid oklch(var(--bc) / 0.2);
-  }
-
-  .pagefind-ui__search-clear {
-    @apply hidden;
-  }
-
-  .pagefind-ui__result {
-    @apply p-4 border rounded-lg mb-4;
-    border: 1px solid var(--pagefind-ui-border);
-  }
-
-  .pagefind-ui__result-title {
-    @apply text-lg font-bold mb-2;
-  }
-
-  .pagefind-ui__result-link {
-    @apply text-primary hover:underline;
-  }
-
-  .pagefind-ui__result-excerpt {
-    @apply text-sm text-base-content opacity-75;
-  }
-
-  .pagefind-ui__result-excerpt mark {
-    @apply bg-accent text-accent-content px-1 rounded;
-  }
-
-  .pagefind-ui__button {
-    @apply btn btn-primary;
-  }
-
-  .pagefind-ui__message {
-    @apply text-sm text-base-content opacity-75 my-4;
-  }
-
-  .pagefind-ui__message:empty::before {
-    content: "未找到结果，请尝试其他关键词。";
-    @apply block text-center py-8 text-base-content opacity-50;
   }
 }
