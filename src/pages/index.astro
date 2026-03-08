@@ -15,6 +15,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
   >
     <div class="home-shell space-y-8">
       <section class="home-hero" data-home-section>
+        <p class="home-date" id="home-daily-date">加载日期中...</p>
         <h1 class="home-title" id="home-daily-quote">未经审视的人生不值得过。</h1>
         <p class="home-desc" id="home-daily-author">—— 苏格拉底</p>
         <div class="flex flex-wrap gap-3 justify-center">
@@ -95,6 +96,70 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     { quote: "人是万物的尺度。", author: "普罗泰戈拉" },
   ];
 
+  const SOLAR_FESTIVALS = {
+    "1-1": "元旦",
+    "2-14": "情人节",
+    "3-8": "妇女节",
+    "4-1": "愚人节",
+    "5-1": "劳动节",
+    "6-1": "儿童节",
+    "9-10": "教师节",
+    "10-1": "国庆节",
+    "12-25": "圣诞节",
+  };
+
+  const LUNAR_FESTIVALS = {
+    "1-1": "春节",
+    "1-15": "元宵节",
+    "5-5": "端午节",
+    "7-7": "七夕",
+    "8-15": "中秋节",
+    "9-9": "重阳节",
+    "12-8": "腊八节",
+    "12-23": "小年",
+  };
+
+  const gregorianFormatter = new Intl.DateTimeFormat("zh-CN", { dateStyle: "full" });
+  const lunarNumericFormatter = new Intl.DateTimeFormat("zh-CN-u-ca-chinese", {
+    month: "numeric",
+    day: "numeric",
+  });
+  const lunarFormatter = new Intl.DateTimeFormat("zh-CN-u-ca-chinese", {
+    month: "long",
+    day: "numeric",
+  });
+
+  const getLunarMonthDay = (date) => {
+    const [month, day] = lunarNumericFormatter
+      .format(date)
+      .split("-")
+      .map((value) => Number.parseInt(value, 10));
+    if (Number.isNaN(month) || Number.isNaN(day)) return null;
+    return { month, day };
+  };
+
+  const getFestivalText = (date) => {
+    const festivals = [];
+
+    const solarKey = `${date.getMonth() + 1}-${date.getDate()}`;
+    if (SOLAR_FESTIVALS[solarKey]) festivals.push(SOLAR_FESTIVALS[solarKey]);
+
+    const lunar = getLunarMonthDay(date);
+    if (lunar) {
+      const lunarKey = `${lunar.month}-${lunar.day}`;
+      if (LUNAR_FESTIVALS[lunarKey]) festivals.push(LUNAR_FESTIVALS[lunarKey]);
+
+      const tomorrow = new Date(date);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowLunar = getLunarMonthDay(tomorrow);
+      if (lunar.month === 12 && tomorrowLunar?.month === 1 && tomorrowLunar.day === 1) {
+        festivals.push("除夕");
+      }
+    }
+
+    return [...new Set(festivals)].join("、");
+  };
+
   const getDailyQuote = (date) => {
     const midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     const daySeed = Math.floor(midnight.getTime() / 86400000);
@@ -103,12 +168,18 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
   };
 
   const applyDailyContent = () => {
+    const dateEl = document.getElementById("home-daily-date");
     const quoteEl = document.getElementById("home-daily-quote");
     const authorEl = document.getElementById("home-daily-author");
-    if (!quoteEl || !authorEl) return;
+    if (!dateEl || !quoteEl || !authorEl) return;
 
     const now = new Date();
     const quote = getDailyQuote(now);
+    const gregorian = gregorianFormatter.format(now);
+    const lunar = lunarFormatter.format(now).replace("日", "");
+    const festival = getFestivalText(now) || "无";
+
+    dateEl.textContent = `${gregorian} · 农历${lunar} · 节日：${festival}`;
     quoteEl.textContent = quote.quote;
     authorEl.textContent = `—— ${quote.author}`;
   };
