@@ -1,0 +1,49 @@
+<svg width="1600" height="840" viewBox="0 0 1600 840" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="蓝天白云背景">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="840" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8FD0FF"/>
+      <stop offset="0.45" stop-color="#BEE7FF"/>
+      <stop offset="1" stop-color="#F4FBFF"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1260 150) rotate(90) scale(160)">
+      <stop stop-color="#FFF6C8" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#FFF6C8" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blurCloud" x="-120" y="-120" width="1840" height="1080" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <linearGradient id="haze" x1="0" y1="540" x2="0" y2="840" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#DFF3FF" stop-opacity="0"/>
+      <stop offset="1" stop-color="#E8F6FF" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="840" fill="url(#sky)"/>
+  <rect width="1600" height="840" fill="url(#sun)"/>
+
+  <g opacity="0.38" stroke="#A8D7F5" stroke-width="1">
+    <path d="M0 130H1600"/>
+    <path d="M0 250H1600"/>
+    <path d="M0 370H1600"/>
+    <path d="M0 490H1600"/>
+  </g>
+
+  <g filter="url(#blurCloud)">
+    <ellipse cx="260" cy="180" rx="170" ry="58" fill="white" fill-opacity="0.85"/>
+    <ellipse cx="360" cy="166" rx="110" ry="42" fill="white" fill-opacity="0.82"/>
+    <ellipse cx="182" cy="195" rx="95" ry="35" fill="white" fill-opacity="0.76"/>
+
+    <ellipse cx="760" cy="228" rx="220" ry="70" fill="white" fill-opacity="0.82"/>
+    <ellipse cx="640" cy="240" rx="130" ry="46" fill="white" fill-opacity="0.72"/>
+    <ellipse cx="900" cy="218" rx="120" ry="42" fill="white" fill-opacity="0.74"/>
+
+    <ellipse cx="1260" cy="292" rx="210" ry="64" fill="white" fill-opacity="0.78"/>
+    <ellipse cx="1372" cy="282" rx="115" ry="40" fill="white" fill-opacity="0.7"/>
+    <ellipse cx="1140" cy="308" rx="120" ry="42" fill="white" fill-opacity="0.72"/>
+  </g>
+
+  <path d="M0 620C180 560 260 662 430 622C590 586 668 532 850 574C1020 614 1120 570 1288 598C1410 618 1506 588 1600 610V840H0V620Z" fill="#B8E0FA" fill-opacity="0.42"/>
+  <path d="M0 686C132 640 252 726 410 702C610 672 742 612 922 646C1112 680 1262 650 1420 676C1498 690 1556 676 1600 682V840H0V686Z" fill="#D8EEFC" fill-opacity="0.7"/>
+
+  <rect y="540" width="1600" height="300" fill="url(#haze)"/>
+</svg>
