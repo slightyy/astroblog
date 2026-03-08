@@ -35,7 +35,7 @@ const accessibleHelpText = `${helpText}: ${title}`;
   {
     image ? (
       // With image - show image with overlay title
-      <div class="relative">
+      <div class:list={["relative", lightImage && "has-light-image"]}>
         <div class="aspect-video w-full overflow-hidden">
           <Image
             src={image}
@@ -209,11 +209,11 @@ const accessibleHelpText = `${helpText}: ${title}`;
     opacity: 0;
   }
 
-  :global([data-theme-type="light"]) .maincard-cover-dark {
+  :global([data-theme-type="light"]) .has-light-image .maincard-cover-dark {
     opacity: 0;
   }
 
-  :global([data-theme-type="light"]) .maincard-cover-light {
+  :global([data-theme-type="light"]) .has-light-image .maincard-cover-light {
     opacity: 1;
   }
 </style>
