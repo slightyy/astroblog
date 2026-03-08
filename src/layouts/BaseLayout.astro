@@ -1,5 +1,4 @@
 ---
-import { ClientRouter } from "astro:transitions";
 import Footer from "@components/Footer.astro";
 import Header from "@components/Header.astro";
 import Navbar from "@components/Navbar.astro";
@@ -12,8 +11,6 @@ import {
   SITE_TAB,
   SITE_THEME,
 } from "@config";
-import ElementCrossing from "astro-vtbot/components/ElementCrossing.astro";
-import PointerOnNavigation from "astro-vtbot/components/PointerOnNavigation.astro";
 
 const {
   title,
@@ -28,9 +25,6 @@ const {
 <!doctype html>
 <html lang={SITE_LANGUAGE} class="bg-base-300" data-theme={SITE_THEME.light} data-theme-type="light">
   <head>
-    <ClientRouter />
-    <ElementCrossing />
-    <PointerOnNavigation />
     <Header title={title} description={description} favicon={SITE_FAVICON} image={image} />
     <title>{`${title} - ${SITE_TAB}`}</title>
 
