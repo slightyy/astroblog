@@ -1,16 +1,12 @@
 ---
-import { SITE_THEME, t } from "@config";
+import { t } from "@config";
 import type { ThemeToggleProps } from "@interfaces/data";
 import { Icon } from "astro-icon/components";
-
-// Generate a unique ID for each component instance
-const uniqueId = `theme-toggle-${Math.random().toString(36).substring(2, 11)}`;
 
 const { className = "" } = Astro.props as ThemeToggleProps;
 ---
 
 <button
-  id={uniqueId}
   class:list={["btn btn-circle btn-md liquid-interactive hover:scale-110", className]}
   aria-label="切换主题"
   data-theme-toggle
@@ -22,77 +18,6 @@ const { className = "" } = Astro.props as ThemeToggleProps;
   <!-- Moon icon for light mode (shown when light theme is active) -->
   <Icon name="lucide:moon" class="theme-toggle-icon h-5 w-5 moon-icon hidden" />
 </button>
-
-<script is:inline define:vars={{ SITE_THEME, uniqueId }}>
-  // Function to update icons based on current theme for a specific toggle button
-  const updateThemeIcons = (toggleButton, isDark) => {
-    if (!toggleButton) return;
-
-    const sunIcon = toggleButton.querySelector(".sun-icon");
-    const moonIcon = toggleButton.querySelector(".moon-icon");
-
-    if (sunIcon && moonIcon) {
-      if (isDark) {
-        sunIcon.classList.remove("hidden");
-        moonIcon.classList.add("hidden");
-      } else {
-        sunIcon.classList.add("hidden");
-        moonIcon.classList.remove("hidden");
-      }
-    }
-  };
-
-  // Initialize toggle for both plain page loads and Astro router events
-  const initThemeToggle = () => {
-    // Use the unique ID to get this specific toggle button
-    const themeToggle = document.getElementById(uniqueId);
-    if (!themeToggle) return;
-    if (themeToggle.dataset.initialized === "true") return;
-    themeToggle.dataset.initialized = "true";
-
-    const currentTheme = document.documentElement.getAttribute("data-theme");
-
-    // Initialize icon state based on current theme
-    updateThemeIcons(themeToggle, currentTheme === SITE_THEME.dark);
-
-    // Toggle theme on click
-    themeToggle.addEventListener("click", () => {
-      const currentTheme = document.documentElement.getAttribute("data-theme");
-      const newTheme = currentTheme === SITE_THEME.light ? SITE_THEME.dark : SITE_THEME.light;
-
-      // Add animation class
-      themeToggle.classList.add("animate-spin-once");
-
-      // Set new theme
-      document.documentElement.setAttribute("data-theme", newTheme);
-
-      // Set theme type based on which theme is active
-      const themeType = newTheme === SITE_THEME.dark ? "dark" : "light";
-      document.documentElement.setAttribute("data-theme-type", themeType);
-
-      localStorage.setItem("theme", newTheme);
-
-      // Update icons for all theme toggles on the page
-      const allToggles = document.querySelectorAll("[data-theme-toggle]");
-      allToggles.forEach((toggle) => {
-        updateThemeIcons(toggle, newTheme === SITE_THEME.dark);
-      });
-
-      // Remove animation class after animation completes
-      setTimeout(() => {
-        themeToggle.classList.remove("animate-spin-once");
-      }, 300);
-    });
-  };
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initThemeToggle, { once: true });
-  } else {
-    initThemeToggle();
-  }
-
-  document.addEventListener("astro:page-load", initThemeToggle);
-</script>
 
 <style>
   @keyframes spin-once {
@@ -112,5 +37,21 @@ const { className = "" } = Astro.props as ThemeToggleProps;
     transition:
       opacity 0.2s ease-in-out,
       transform 0.2s ease-in-out;
+  }
+
+  :global([data-theme-type="dark"]) .sun-icon {
+    display: block;
+  }
+
+  :global([data-theme-type="dark"]) .moon-icon {
+    display: none;
+  }
+
+  :global([data-theme-type="light"]) .sun-icon {
+    display: none;
+  }
+
+  :global([data-theme-type="light"]) .moon-icon {
+    display: block;
   }
 </style>
