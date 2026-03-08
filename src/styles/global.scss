@@ -47,7 +47,7 @@ body {
     radial-gradient(circle at 14% 18%, oklch(0.64 0.01 255 / 0.16), transparent 36%),
     radial-gradient(circle at 86% 82%, oklch(0.58 0.008 255 / 0.14), transparent 34%),
     linear-gradient(160deg, oklch(var(--b2)) 0%, oklch(var(--b3)) 100%);
-  background-attachment: scroll;
+  background-attachment: fixed;
 }
 
 h1,
@@ -456,7 +456,6 @@ kbd {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  display: none;
 }
 
 .site-bg-orbs::before,
@@ -466,22 +465,6 @@ kbd {
   border-radius: 999px;
   filter: blur(42px);
   opacity: 0.42;
-}
-
-/* Performance mode: disable expensive backdrop-filter across the UI */
-.glass-card,
-.glass-panel,
-.glass-float,
-.glass-float-strong,
-.glass-subcard,
-.liquid-card,
-.liquid-panel,
-.liquid-interactive,
-.liquid-input,
-.liquid-action-btn,
-.menu :where(a, summary) {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
 }
 
 .site-bg-orbs::before {
