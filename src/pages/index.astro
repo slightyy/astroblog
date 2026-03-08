@@ -184,7 +184,11 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
     authorEl.textContent = `—— ${quote.author}`;
   };
 
-  document.addEventListener("astro:page-load", applyDailyContent);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", applyDailyContent, { once: true });
+  } else {
+    applyDailyContent();
+  }
 </script>
 
 <style>
