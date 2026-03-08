@@ -16,7 +16,6 @@ tags:
 
 [Colab Notebook（可直接运行）](https://colab.research.google.com/drive/1e2gmakoP7h5DNnRF1BhEyzy9YMRVdL5c?usp=sharing)
 
-# qwen3.5 小模型在企业中的实际应用（2/4）：bi面板实时自动解读
 
 本篇使用 **Google Colab** 完成训练与推理链路，GPU 使用 **T4**。
 
@@ -24,25 +23,25 @@ tags:
 
 ## 模块目录
 
-- 模块01：1. 安装依赖（含 swanlab）
-- 模块02：1.1 重启运行时（必须）
-- 模块03：2. 重启后检查版本
-- 模块04：3. 检查 GPU
-- 模块05：4. 生成数据
-- 模块06：5. 初始化 swanlab
-- 模块07：6. 准备测试数据
-- 模块08：7. 模型懒加载
-- 模块09：8. （可选）挂载 LoRA Adapter
-- 模块10：9. 路由规则与质量评分
-- 模块11：10. 推理函数（单模型）
-- 模块12：11. 路由执行（0.8B主路+2B回退）
-- 模块13：12. 单条测试
-- 模块14：13. 批量路由+swanlab记录
-- 模块15：14. 保存结果
+- 1. 安装依赖
+- 1.1 重启运行时
+- 2. 重启后检查版本
+- 3. 检查 GPU
+- 4. 生成数据
+- 5. swanlab（如果没有账号，可以不用执行这个模块）
+- 6. 准备测试数据
+- 7. 模型懒加载
+- 8. 挂载 LoRA Adapter（如果没有训练好的，可以不用挂载）
+- 9. 路由规则与质量评分
+- 10. 推理函数（单模型）
+- 11. 路由执行（0.8B主路+2B回退）
+- 12. 单条测试
+- 13. 批量路由+swanlab记录
+- 14. 保存结果
 
 ## 代码实现
 
-### 模块01：1. 安装依赖（含 swanlab）
+### 1. 安装依赖（含 swanlab）
 
 ```python
 !pip -q uninstall -y transformers
@@ -51,14 +50,14 @@ tags:
 !pip -q install -U swanlab
 ```
 
-### 模块02：1.1 重启运行时（必须）
+### 1.1 重启运行时
 
 ```python
 import os
 os.kill(os.getpid(), 9)
 ```
 
-### 模块03：2. 重启后检查版本
+### 2. 重启后检查版本
 
 ```python
 import transformers
@@ -69,13 +68,13 @@ print("path:", transformers.__file__)
 print("qwen3_5 supported:", "qwen3_5" in CONFIG_MAPPING_NAMES)
 ```
 
-### 模块04：3. 检查 GPU
+### 3. 检查 GPU
 
 ```python
 !nvidia-smi
 ```
 
-### 模块05：4. 生成数据
+### 4. 生成数据
 
 ```python
 import json
@@ -191,7 +190,7 @@ Path(DATA_PATH).write_text(json.dumps(samples, ensure_ascii=False, indent=2), en
 print("生成完成：", DATA_PATH, "样本数：", len(samples))
 ```
 
-### 模块06：5. 初始化 swanlab
+### 5.swanlab
 
 ```python
 SWANLAB_ON = False
@@ -212,7 +211,7 @@ except Exception as e:
     print("swanlab disabled:", e)
 ```
 
-### 模块07：6. 准备测试数据
+### 6. 准备测试数据
 
 ```python
 import json
@@ -259,7 +258,7 @@ if not Path(DATA_PATH).exists():
 print("DATA_PATH:", DATA_PATH)
 ```
 
-### 模块08：7. 模型懒加载
+### 7. 模型懒加载
 
 ```python
 import torch
@@ -295,7 +294,7 @@ def get_model(name: str):
 print("lazy loader ready")
 ```
 
-### 模块09：8. （可选）挂载 LoRA Adapter
+### 8. （可选）挂载 LoRA Adapter
 
 ```python
 # 如果你没有微调过，就保持注释
@@ -310,7 +309,7 @@ print("lazy loader ready")
 # models["large"] = PeftModel.from_pretrained(mdl_l, large_adapter_path)
 ```
 
-### 模块10：9. 路由规则与质量评分
+### 9. 路由规则与质量评分
 
 ```python
 import json, re
@@ -352,7 +351,7 @@ def output_quality_score(obj):
     return min(score, 1.0)
 ```
 
-### 模块11：10. 推理函数（单模型）
+### 10. 推理函数（单模型）
 
 ```python
 def generate_bi_json(payload: dict, model_name: str, max_new_tokens: int = 320):
@@ -394,7 +393,7 @@ def generate_bi_json(payload: dict, model_name: str, max_new_tokens: int = 320):
     return {"model": model_name, "raw_text": text, "parsed": obj, "quality": quality}
 ```
 
-### 模块12：11. 路由执行（0.8B主路+2B回退）
+### 11. 路由执行（0.8B主路+2B回退）
 
 ```python
 def route_predict(payload: dict, quality_threshold: float = 0.65, direct_large_threshold: float = 0.95):
@@ -415,7 +414,7 @@ def route_predict(payload: dict, quality_threshold: float = 0.65, direct_large_t
     return large
 ```
 
-### 模块13：12. 单条测试
+### 12. 单条测试
 
 ```python
 test_input = {
@@ -449,7 +448,7 @@ print("raw_text:", result["raw_text"])
 print("parsed:", result["parsed"])
 ```
 
-### 模块14：13. 批量路由+swanlab记录
+### 13. 批量路由+swanlab记录
 
 ```python
 import pandas as pd
@@ -487,7 +486,7 @@ if SWANLAB_ON:
     print("swanlab logged")
 ```
 
-### 模块15：14. 保存结果
+### 14. 保存结果
 
 ```python
 from pathlib import Path
